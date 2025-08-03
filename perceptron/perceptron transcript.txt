@@ -1,0 +1,714 @@
+Introduction
+0:00
+hello everyone welcome to lecture 11 or day 11 of the machine learning teach by
+0:08
+doing project in this particular lecture we will be looking at coding the perceptron
+0:15
+algorithm in Python so in the previous lecture we
+0:20
+took a very very detailed look at the perceptron algorithm and saw that it is
+0:26
+one of the oldest machine learning models we saw that this model was invented in 1957 and it was one of the
+0:34
+first models which really learned from data and that's why although it was not classified as a machine learning model
+0:40
+at that time it really was one uh we also saw that this particular
+0:46
+model was not just an ml algorithm but it was also implemented as a machine by Engineers of that
+0:52
+time and the first paper which was released on the perceptron the authors really intended for the perceptron to be
+0:59
+a representation of the human brain although it was extremely simplified version but still the vision was really
+1:06
+moving towards artificial intelligence the way we see it today I really like the percepton
+1:12
+algorithm because it is one of the oldest ml models and the roots of all ml
+1:18
+models which we see around us right now can be found in the perceptron we can learn several things from the perceptron
+1:25
+such as training a machine how a machine learns from data Etc the primary aim of
+1:32
+the percept or when it was developed was to recognize shapes patterns letters and numbers of course ml algorithms Now can
+1:39
+do much much more complex and Powerful things but it's always good to have
+1:45
+foundational knowledge so in today's lecture we will
+1:51
+uh be looking at coding the percept on algorithm in Python essentially you will write the entire code for the Perron in
+1:58
+Python let let me tell you why we are learning about this right now so as I mentioned the reference for the
+2:05
+perceptron algorithm is this MIT 6036 which is Introduction to the machine learning course if you go to the
+2:12
+perceptron lecture and uh if you go through their video lectures and if you go through their assignments you will
+2:18
+see that they explain perceptron which we covered in the previous lecture of perceptron as well but there is no
+2:25
+demonstration of writing the code about this in Python
+2:31
+uh and I believe that unless you actually write the code in Python you will not really understand the algorithm
+2:37
+itself you will not really have fun uh even in this Microsoft's lecture which we have been following there is no
+2:44
+mention first of all of the percept Ron even and there is no coding lesson for
+2:49
+the percept run so I decided to create a coding lesson all on my own uh and I'll
+2:55
+also be sharing the code files with you as I do throughout this particular lecture
+3:01
+Series so this particular lecture will be about start to end coding of the
+3:07
+percepton algorithm in Python if you have directly seen this lecture without
+3:13
+seeing the previous one I highly recommend that you go through the previous lecture because in this lecture
+3:19
+I'm not going to explain the algorithm I've already done that in a lot of detail in the previous lecture the
+3:25
+previous lecture was around 1 hour 15 minutes long so it was quite detailed in which I go through the algorithm step by
+3:32
+step and what it really means uh but if you have been through the previous lecture and want to know
+3:38
+how to code the perceptor in Python yourself this is the best place to start
+3:43
+so let's get started uh as is the case with all classification problems this is how our
+Recap of Perceptron
+3:50
+data looks like as I've mentioned on the left hand side of the screen the red
+3:55
+negative are the negative data which means the correct answer is minus one in this case uh and my positive class data
+4:03
+has been shown by plus signs which means the correct answer in this case is+
+4:08
+one so this is my data and the aim is to construct a linear classifier the aim is
+4:14
+to find this straight line which is given by Theta transpose X Plus Theta which is the best classifier for the
+4:21
+negative and the positive points there can be so many of such classifiers so many such straight lines we can draw our
+4:27
+aim is to find the best one so mathematically the percepton algorithm looks something like this for
+4:34
+T is equal to 1 to capital T which is the number of
+4:40
+iterations for I = 1 to small n n is the number of training data
+4:50
+points uh this algorithm says that for each training data point you check this
+4:56
+particular value Y into Theta transpose x + Theta if it's less than zero then you update
+5:02
+the hypothesis you update Theta by adding the product of y i and XI to it
+5:07
+you update Theta by adding Yi to it and then you return Theta and
+5:13
+Theta if you are not understanding why are we checking this particular quantity or why are we updating Theta and Theta
+5:19
+not like this again go to the previous lecture in which everything has been explained in a lot of detail so you can
+5:26
+follow this lecture clearly as is done in practice in all of my lectures which I'm doing I don't just
+5:33
+write the mathematical representation but I really try to explain this algorithm in words so let us try to
+5:40
+understand how the percepton algorithm Works in words so this is the mathematical representation right so
+5:47
+this is mathematics let's see what this means in
+5:53
+words first you decide the number of iterations let's say I want to do 10 iterations which is this capital T
+6:01
+then you initialize Theta and Theta to zero that's your first hypothesis iteration let's say Theta and Theta not
+6:08
+is zero then you start with the first iteration uh when you start with the
+6:13
+iteration then you go through each point in the data set so this is given by for I = to small 1 to I = to 1 to small n
+6:21
+which means you go through each point in the data set and for each point you check the current hypothesis
+6:28
+prediction if the hypothesis makes a mistake so this if condition is given by why I why
+6:36
+I multiplied by Theta transpose x i + Theta less than or equal to Z so if this
+6:42
+particular value is less than zero which means the hypothesis made a mistake for
+6:47
+the Yi and XI which we have selected then you essentially uh rotate the current
+6:55
+hypothesis so that it classifies the mistaken Point corrent correctly so let's say the current hypothesis is like
+7:01
+this and it has made a mistake you rotate the hypothesis and mathematically that rotation is also given by this
+7:08
+update values so ma mathematically rotating the current hypothesis means updating Theta
+7:15
+and Theta not basically it says that if your current hypothesis makes a mistake for
+7:20
+the point uh then rotate that hypothesis until it gives a correct prediction for
+7:26
+that point and that rotation is given by this up date so that rotation means that
+7:31
+Theta values need to be increased by y i into XI and Theta not's value need to be
+7:37
+increased by y then we have to keep on going through
+7:43
+all the data points right now we just looked at one data point right maybe this and we updated the hypothesis if
+7:49
+the hypothesis made a mistake then you go through all the data points you go through this you go through this you go
+7:55
+through this you go through this and you go through this as you go through all the data points you keep on updating the
+8:01
+hypothesis if mistakes are made so basically as you go through all the data points you check this condition if
+8:07
+mistakes are made you update the hypothesis by rotating it if mistakes are not made you jump to the next data
+8:13
+point and final thing is you repeat this entire procedure till 10 iterations are
+8:20
+done so after going through all the data point once you start with the second iteration and then repeat the above
+8:26
+steps four five six and seven until 10
+8:33
+iterations are done so these are the number of iterations that you start with in the first place and the final
+8:38
+hypothesis which you get is your answer just to repeat what you do is start with Theta and Theta not equal to
+8:45
+Z uh then check then go through each training Point start with the first iteration go through each point one by
+8:52
+one check if the current hypothesis is making a mistake if mistakes are made rotate the hypothesis and update it
+9:00
+after going through all the points once then go through the second iteration again go through all the points once and
+9:05
+keep on updating the hypothesis till no mistakes are made do this process till
+9:11
+you finish 10 iterations the final hypothesis which remains that is your
+9:17
+answer this is the percepton algorithm in words now if you did not understand
+9:22
+this part which means that you have not understood the previous lecture or if you or you have not been through the
+9:28
+previous lecture so I highly recommend you again to go through the previous lecture if this part is not clear to
+9:35
+you now all of these six or seven or eight steps which I've mentioned in
+9:40
+words here I'm going to code this in Python okay so let's get started with
+Python coding
+9:47
+the python coding um as has been mentioned in the comments I'm going to try to go through
+9:53
+this part a bit slowly so that all of you can understand okay so as always we'll be
+9:59
+working in Jupiter notebook files and uh so I have created a file here which is
+10:05
+called as perceptron do iynb remember that Jupiter notebook
+10:10
+files extensions are do ipynb okay so if you if you are new to vs code
+10:18
+or if you have not installed vs code or if you have not installed Jupiter Notebook on vs code if you have not
+10:25
+installed python libraries like numai mat plot Li Etc please go to lecture number five where we install vs code
+10:34
+install Python and I think lecture number seven and 8 where we install Jupiter
+10:39
+notebooks so let's get started with the code uh there are two python libraries
+10:45
+which we are going to be using for this demonstration first is numai since we will need to uh initialize and load
+10:53
+arrays that is why the first Library which we import is numpy and we write the statement as import numpy as
+11:01
+NP the second Library which we will import is Matt plot lib uh and that's
+11:08
+why we import uh the second Library matplot lip. pyplot as PLT these are the
+11:14
+only two libraries which we will be needing in this perceptron algorithm code so I write these two lines and I
+11:22
+run uh this particular code block or this cell in uh Jupiter notebook now you
+11:28
+can see this tick mark shows which means this code has been run successfully The Next Step which I need
+11:35
+to do is import the data points which I showed over here this is my data this is
+11:41
+my ground truth data so uh the data point which I have is this for the positive I have three
+11:48
+points - 2A 3 0a 1 and the 2 comma minus1 so positive points means that
+11:56
+the cre value is +
+12:02
+one uh and the negative Point means that the true value is minus one or it the
+12:08
+second class so this is the first class and this is the second class basically
+12:14
+the positive class is this and the negative class is
+12:19
+this so three points in the positive class and three points in the negative
+12:26
+class great so I Define the positive points like this note that I have used
+12:31
+an array here so array means that our points will be in a array and then each
+12:37
+element of the array is one point so if I run this particular uh code block and I plot
+12:44
+positive points or rather display positive points you will see that it's an array and this
+12:51
+array has three elements the first point whose x coordinate is min -2 and 3 the
+12:56
+second Point whose x coordinate is zero and y coordinate is 1 and the third Point whose x coordinate is 2 and y
+13:03
+coordinate is minus1 similarly if you run the negative
+13:10
+points you will see that it is also an array and that particular array has three elements the first element is the
+13:17
+first point whose x coordinate is min -2 y coordinate is 1 the second Point whose
+13:23
+x coordinate is zero y coordinate is minus1 and the third Point whose x
+13:28
+coordinate is two and and y coordinate is minus 3 so the reason we downloaded
+13:33
+the numpy package is because uh we can Define arrays very easily using np.
+13:38
+array so NP means that we are using the nump package to define or create the array in the first
+13:45
+place great so we have uh defined the positive points and the negative points
+13:51
+which means we have defined our data the next uh thing is to plot the data points
+13:57
+uh what we will do is that we will show the positive points in the blue color
+14:02
+with the O marker or the circle marker we will show the negative points
+14:08
+in the red color with the X marker we will label the positive points as positive class we will label the
+14:14
+negative points as negative class the xaxis label we will give as X1 and the y
+14:20
+axis label we will give as X2 so let me run this so here you can see the plot
+14:25
+has appeared uh and it looks very similar to what we had here xaxis label
+14:30
+is X1 y AIS label is X2 as we can see here x-axis label is X1 y AIS label is
+14:37
+X2 the negative class points are given here which are very similar to the three
+14:43
+points which we had and the positive class are given by these blue dots which
+14:49
+are also very similar looking to the three positive points which we had in our diagram and then the positive class are
+14:56
+labeled as or the legend is positive class and the negative class is labeled as negative class so this is why we
+15:03
+downloaded the or imported the Matt plot lib library because we needed to plot things we needed to plot these points we
+15:11
+needed to plot an XY grid with X labels and Y labels and you can look at the plotting commands it's very simple we
+15:19
+showed the positive class points as negative class points as single points right so that is also called a scatter
+15:25
+plot so we use the command PLT do scatter the first thing we showed is a
+15:30
+PLT do figure which means first we are showing a figure with size eight and six
+15:35
+you can play around with the size here then we show the scatter points on top of this which means we show these points
+15:42
+the positive class and the negative class and then we uh say that I want the X label to be denoted as X1 I want the Y
+15:49
+label to be denoted as X2 I want the title to be denoted as initial data
+15:55
+points uh and I want to show the grid which means the XY grid and then I want to show this plot that's
+16:01
+why we say PLT do show and the reason we are using PLT is because we imported
+16:06
+Matt plot lift. P plot as PL great so the Second Step has been
+16:12
+done which means that we have loaded the points and we show them as a plot now what we will do is we will
+16:18
+combine all the training data together into an X array and we will combine all
+16:24
+the testing or the Y AIS into a y array so ESS essentially uh the way to combine
+16:31
+all the positive and negative points we are using a command called np. v stack uh so what this command does is
+16:39
+actually let's say let's say there is an array
+16:45
+one which has the value 1A 1 2A 2 and 3A
+16:52
+3 let's say this is the first array and let's say this is the second
+16:58
+array which is 4A 4 5A 5 and 6A
+17:05
+6 uh what np. vcat does is that it vertically concatenates all this array
+17:11
+which means that it vertically Stacks them on top of each other so what NP do
+17:16
+v v stack does is that np. v
+17:23
+stack of array 1 and array two
+17:29
+what it does is that it creates an array three which is a vertical array and it
+17:36
+contains six elements it contains 1A 1 2A 2 3A 3 4A
+17:48
+4 uh 5A 5 and 6A 6 so this is the meaning of vertical
+17:55
+vertical stacking or np. v stack so this is exactly what we are doing here xal to
+18:01
+NP do v stack positive points and negative points so we are vertically stacking the positive and the negative
+18:06
+points so if you run what x means you will see that it shows this value so these three are the positive points and
+18:14
+these three are the negative points they have been stacked on top of each other then what this Y is equal to np.
+18:21
+array 1 uh into length of positive points plus one into length of negative points what
+18:28
+this does is that uh we have uh so we have positive
+18:38
+points so this is the x value let's say we have three x values uh or the coordinat so x1a X2 y1a
+18:47
+Y2 or x1a y1 x2a Y2 and x3a Y3 these are
+18:53
+the points and the true value of these points is plus one right uh the true value of this points
+19:00
+is + one and the negative points are also three three negative
+19:11
+points and the true value of these negative points is equal to
+19:17
+minus1 so by that np. v stack command we we collected all these points into a
+19:23
+single vertical array so that is X but now now what we want to do is we
+19:30
+want to collect all of these points also in a vertical array so what what we we want to do is
+19:36
+that we want small y to be equal to + 1 + 1 + 1 -1 -1 -
+19:45
+one so this is what actually we are doing by this uh second statement which
+19:50
+is np. array 1 into length of positive points which means the first three
+19:55
+values of the new array will be equal to one these first three values uh and then plus -1 into length
+20:04
+of negative points which means that the second three values will be equal to minus1 -1 -1 - one this is what we are
+20:11
+doing we are essentially creating uh the small y array with this
+20:17
+statement so if you run what small y actually means you will see that it it
+20:22
+consists of six values + 1 + 1 + 1 -1 -1
+20:27
+-1 like what we have done here like what I showed over here so essentially with
+20:33
+this particular command we combined all the positive points into one big array called X sorry we combined all positive
+20:39
+and negative points into one big array called X and we combined all the labels associated with those points into an
+20:45
+array called small y so you can think of this as input
+20:51
+array and the output array and now we Define the perceptron
+20:56
+algorithm so perceptron algorithm uh is a function which consists of the input data which is the array of inputs which
+21:03
+we have collected the capital x which we found here this input then it also takes
+21:09
+as an argument the Y values which are the actual values so plus one + 1+ 1 -1
+21:15
+-1 - one and the number of steps or the number of iterations which we are going to do so if you look at this
+21:22
+algorithm first we have to decide that decide the number of iterations which we need to do right this particular part so
+21:29
+let's say 10 so that is another input which we need to give to the percepton
+21:35
+algorithm so initially we have started with 10 steps or 10 iterations then as I
+21:40
+mentioned the next step is initialize Theta and Theta not to be equal to zero
+21:47
+this is the next step and this is exactly what we are doing over here so Theta is ini
+21:54
+initialized as a zero array NP do zos means that we are creating an arrow
+22:00
+array where all values are equal to zero remember Theta is a vector whose length
+22:05
+is equal to the number of features which we have so here there are two features right X1 and X2 so uh Theta will be
+22:13
+equal to an array with two zeros so essentially Theta will start out
+22:19
+as so Theta will start out as 0a
+22:25
+0 and Theta not will start out as zero this is just a
+22:31
+scalar value okay and then we Define these two Loops the first Loop is do the number of
+22:38
+iterations which is equal to 10 and the second Loop is go through every single data point so this is what has been
+22:44
+mentioned here go through each point in the data
+22:49
+set which is given by uh this particular line of command enumerate capital x
+22:55
+which means that for the length of whatever is there in X you go through every single point and remember now
+23:02
+capital x has all of our data points stacked in top of stacked on top of each other first the three positive points
+23:08
+then the three negative points so we are going through all the data points in that data set and then for each point we
+23:16
+have to check this condition right so if y i into uh Theta transpose X Plus Theta is
+23:23
+less than zero so this is exactly this part this is exactly ly this part we are
+23:29
+checking this condition which means we are checking if the hypothesis is making a mistake on the current point or not so
+23:36
+y i multiplied by Theta transpose x i + Theta this is exactly what has been
+23:42
+written over here y i multiplied by so NP do dot means Theta transpose XI
+23:49
+that's a DOT product between the Theta vector and the XI Vector which is the current
+23:54
+Point uh and then we add Theta not and if this product is less than zero which means if an error has been made update
+24:01
+Theta and Theta not and how are Theta and Theta not updated Theta is updated
+24:06
+by adding Yi into XI to it and Theta not is updated by adding Yi to it yeah so if
+24:13
+you look at the code the code is actually exactly similar to what has been written in terms of the algorithm
+24:19
+here the only change is probably the NP do dot which is we saying that Theta
+24:24
+transpose XI just means taking a DOT product between Theta and X but everything which has been written down
+24:29
+on paper is exactly the way you have to write this python code so it is actually very easy to
+24:36
+write this particular algorithm in Python it just 1 2 3 4 5 6 7 8 nine
+24:41
+lines of code that's it there is another line here which is basically plotting so this I have added
+24:48
+from my side because I want to show you after each iteration how that hypothesis looks like and how it eventually
+24:54
+converges to the correct answer but if you don't want to see this slot you don't need to see you don't even need
+25:00
+this particular line uh it's just nine lines of code that's
+25:07
+it and I think this will be really very easy to understand once you understand
+25:13
+this algorithm and uh in words what we are doing in the percepton algorithm we
+25:18
+are first initializing Theta and Theta not to zero we are in defining the number of iterations then we are going
+25:25
+through every single point in the data set we are checking if a mistake has been made or not if a mistake has been
+25:31
+made we update Theta and Theta not then we again go through every s go through the next point in the data set till we
+25:38
+reach the end of the data set then we go to the next iteration we keep on doing this for let's say we have 10 iterations
+25:44
+we keep on doing this going through each data point for 10 10 times and the final
+25:50
+Theta and Theta not which this Pro process returns is our final answer uh now I have added one more
+25:57
+command here which is plot decision boundary at the end of each iteration so after we go through every data point
+26:03
+once I'm going to plot the decision boundary to show you how the line evolves or how our hypothesis prediction
+26:11
+evolves so this plot decision boundary is basically just a function where we plot the straight line at the end of the
+26:18
+hypothesis so I'm not going to go through the details of this because it's just plotting that straight line um but
+26:26
+you can have a look at this plotting function it's basically very similar to uh the plotting commands which which we
+26:32
+used here such as scatter X label y label Etc so just go through the code
+26:37
+file when I'm going to upload it but I'm this is just a decision boundary which we plot after every
+26:42
+iteration uh so now actually let's run the perceptron code so here we just
+26:47
+Define the function now here we just Define the function now it's the time to run the perceptron
+26:54
+function so Theta final and Theta not final are the the results which I want
+26:59
+and then I run the perceptron function I give the inputs as X which is my X data set the vertically stacked data set my Y
+27:07
+is the uh + 1 + 1 + 1 -1 -1 -1 those values and the 10 is the number of
+27:14
+iterations which I want to do so I'll be showing you 10 different plots after each iteration how the straight line is
+27:20
+so let me run this and now uh see you can see it's taking time 3 seconds 4
+27:26
+seconds so in 4 seconds this entire code has been executed for 10 different times so let us see the decision
+27:33
+boundary after every iteration so you can see that this is the first decision boundary and it is
+27:39
+very bad it has essentially made how many errors it has made an error here and it has made an error on this
+27:46
+point so it since the normal to this decision boundary is over here it will classify this red Point as positive and
+27:54
+it will classify this blue point over here as negative so it will make two mistakes remember when a mistake has been made
+28:00
+our algorithm rotates the hypothesis so in the next iteration you will see that the hypothesis rotated so that we avoid
+28:07
+the mistakes so it is rotated in the clockwise Direction Still we can see that it passes through two points and
+28:13
+still it's not quite perfect this is the iteration number three where it actually makes two mistakes again because the
+28:20
+normal to this is here so it does classify the positive points correctly but it incorrectly classifies these
+28:26
+three negative points so still there is is an error so we need to then again rotate it backwards we need to rotate it
+28:31
+anticlockwise because the final line which we want is this so remember when going from iteration one to iteration
+28:38
+two we rotated the hypothesis clockwise but then we turn two clockwise here this
+28:44
+is going in the wrong direction so then we again need to rotate it counterclockwise then you can see that
+28:50
+in iteration 4 we have rotated it counterclockwise a bit but there is an issue because it classifies many points
+28:57
+incorrectly so it the positive normal is here so it classifies this point as
+29:02
+positive which is wrong and it classifies these two positive points are negative so it's again wrong so we need
+29:08
+to further move it in an anticlockwise Direction iteration five we do move it anticlockwise but still there are issues
+29:14
+it classifies the positive points correctly and it makes mistakes on two negative points then in iteration six we
+29:22
+kind of have to turn it clockwise again because we want it to pass in the middle between the positive and negative so we
+29:28
+turn it clockwise and now it's doing a bit better still there are issues because makes an error on this point it
+29:36
+makes an error on this point it also makes an error on this point so then we have to turn it clockwise sorry turn it
+29:43
+anticlockwise again so we try to turn it anticlockwise and we see that it has it
+29:49
+is making correct predictions on the positive points it is making correct predictions on two negative points but
+29:54
+it has made an error on one negative point so it is getting close we need to again turn it clockwise I think yeah so
+30:01
+that it it passes through the middle and now you see we turn it
+30:06
+clockwise and now it leads to the perfect answer at iteration number eight the straight line which we see perfectly
+30:13
+separates the positive class from the negative class so we have converged to the correct answer in eight
+30:19
+iterations and then iteration number nine and iteration number 10 is the same because no mistakes will be made so if
+30:25
+no mistakes are made then our percepton algorith does not update anything look at this particular
+30:31
+step uh it only updates Theta and Theta not when a mistake has been made if no
+30:37
+mistake has been made it does not update Theta and Theta not so after iteration number eight the value of the best
+30:43
+hypothesis which we have essentially stays the same so in eight iterations of the
+30:48
+percepton algorithm we have we have reached the correct answer and this is coding perceptron algorithm in Python
+30:56
+you can actually see how easy it was it just requires following three steps First Step uh is loading the correct
+31:04
+packages nump for array manipulations and mat plot lip for plotting the second
+31:09
+step is loading the data points and stacking them correctly so first we load the data points and visualize them then
+31:16
+we need to stack all the training points all the input values in one long array
+31:23
+and we need to stack all the output values which is+ one + 1+ one - 1 - one - one then this input and output will be
+31:30
+fed to the perceptron algorithm the third step is to define the perceptron
+31:36
+algorithm uh and if you have written down this algorithm mathematically on or
+31:42
+if you have understood it in words it's actually very similar to your understanding first initialize Theta and
+31:48
+Theta not to zero decide the number of iterations you want to do which is given by steps here we are doing 10 iterations
+31:55
+in each in each iteration go through every every single point of the data set and check whether a mistake has been
+32:01
+made if a mistake has been made by the hypothesis rotate the hypothesis uh which means update Theta
+32:07
+and Theta not keep on doing this for all the data points once you have reached or
+32:13
+covered every single data point plot the correct plot the decision boundary at the end of that iteration then go to the
+32:21
+second iteration again go through all data points similarly keep on doing this 10 times the final answer which you get
+32:29
+is your optimal Theta and Theta n so here again we saw that initially
+32:34
+the the hypothesis which was return returned after iteration 1 2 3 4 5 6 it
+32:40
+use it is making errors but slowly the algorithm is learning on its own here you see this is why it's called machine
+32:46
+learning because the computer program is learning on its own what the correct classifier Is So currently it makes a
+32:53
+mistake so here it's like this right it's making a mistake then it turns itself like this then it turn turns itself like this again like this
+32:59
+iteration six again like this iteration s is like this but it's still not correct iteration 8 it's like this where
+33:06
+it's finally correct uh so this kind of turning is machine learning visually so the
+33:14
+algorithm of the straight line learns from its mistake and it corrects itself right this is the true essence of ml or
+33:21
+machine learning and you saw how easy it was to implement the percep algorithm in Python
+Conclusion
+33:27
+uh very sadly modern ml courses such as the Microsoft course does not cover the perceptor algorithm and it directly
+33:33
+jumps to regression classification Etc but in fact in classification itself one of the foundational algorithms is the
+33:40
+perceptron and before coming to practical demonstrations of the class
+33:45
+classification uh algorithm it's very important to understand the fundamentals very very
+33:52
+clearly so uh up till now we have looked at the following classic ifers we have
+33:58
+looked at the random linear classifier with the cats and dogs example I think in lecture number six or lecture number
+34:04
+seven uh here we defined the random linear classifier and the second
+34:10
+algorithm which we have looked at right now and tested in Python is the perceptron algorithm so we have run two
+34:16
+different algorithms on python now the random linear classifier algorithm and the perceptron algorithm classification
+34:23
+also involves many other algorithms uh such as k means classification the clustering algorithm
+34:30
+several other algorithms which we will come to so for example in the Microsoft
+34:35
+scores of classification it does not go through random linear classifier uh it does not go through
+34:43
+uh the percept algorithm in detail but it goes through uh linear classifiers
+34:49
+and something called as logistic regression so it goes through linear uh
+34:55
+linear classifiers and Logistics classifiers but it does not use the random linear classifier algorithm which
+35:02
+we learned about uh so it directly jumps into uh
+35:07
+complicated things a bit and that's why I did not go into uh these things
+35:14
+earlier so if you look at the kind of classification algorithms which they use
+35:20
+they directly start with support Vector machines linear models and all these things but they don't look at
+35:26
+fundamental options such as perceptron the random linear classifier
+35:31
+Etc which really teach us a lot about uh the correct algorithm to use in the
+35:39
+next lecture we will be looking at something which is called as margin something which is called as linear
+35:46
+separ separability Etc uh which are theoretical Concepts which are introduced in the MIT course very nicely
+35:53
+after which we'll be moving towards features margin maximization and then we will move to regression at that time
+35:59
+we'll also look at logistic regression so I hope everyone is following with me up till now uh up till now what you have
+36:06
+learned is Introduction to ml types of ml then
+36:12
+you learned about linear classifiers and you learned about two linear classification algorithms the random
+36:18
+linear classifier and the perceptron both of which you learned the theory the fundamentals and you also learned the
+36:25
+coding which is the main purpose of the the series which I'm making I don't just want to show you the codes I want to
+36:31
+show you a lot of detail about the fundamentals that's why the previous lecture on the percept r these are the
+36:37
+notes for that lecture that was 1 hour 10 minutes long uh and it was meant so that you understand this coding lecture
+36:43
+in lot more detail uh okay I think this brings us to
+36:49
+the end of this particular lecture everyone thanks a lot for following with me and as I've already mentioned before
+36:55
+please try to execute the code files which I'm uploading please try to write down the percepton algorithm on your own
+37:02
+so that you can see how it is working uh how it learns in fact in last lecture we
+37:08
+looked at the iterations of the P percepton manually we took an example and we saw how the line rotates manually
+37:15
+without even coding that just gives us a lot of intuition about how a machine learns so this is the kind of hard work
+37:22
+which you will need to do the reason I'm making this series and learning in front of you is that you also remain motivated
+37:28
+along with me so thank you everyone we'll see you in the next lecture where we look at margin uh we'll look at the
+37:35
+theory of separability after which we are going to move towards very interesting things such as uh feature
+37:41
+representation margin maximization and logistic regression thank you so much everyone
+37:47
+I'll see you in the next lecture
