@@ -1,0 +1,899 @@
+Introduction
+0:00
+hello everyone welcome to the lecture 17 of the machine learning teach by doing
+0:07
+project this is a very important lecture because in this lecture we are going to
+0:12
+learn about one of the most important machine learning algorithms which is
+0:17
+called as gradient descent unlike other courses uh I'm not
+0:23
+going to start directly from the mathematical formula I'm first going to visually make
+0:29
+you understand why this algorithm works in the first place uh the motivation and
+0:35
+the intuition behind this algorithm and the visual introduction of how this algorithm works then when we come to the
+0:42
+mathematical algorithm itself you will understand it much much better uh I actually spent quite a bit
+0:50
+of time uh making the format for this lecture so that we have python coding
+0:57
+also in this lecture and we have a lot of visual element so that you never
+1:02
+forget what gradient descent is okay so this is also the part three
+1:08
+of our series on logistic regression in the previous parts we have uh defined
+1:14
+the hypothesis class for logistic regression which is the uh sigmoid
+1:22
+hypothesis then uh we have also uh defined the loss function in the
+1:31
+previous lecture which was the cross entropy
+1:41
+loss correct so in this particular lecture uh the main idea which we are
+1:47
+going to explore is how to find the
+1:56
+Theta uh for the linear classifier which minimizes is our loss
+2:09
+function remember that the loss function is L and L is a function of uh my
+2:16
+hypothesis H and the True Values y i and H H in turn is a function of
+2:23
+theta so how do we find the Theta which minimizes the loss function
+2:29
+to answer this question we will answer one more question let's say if there is
+2:35
+any function f let's say there is any function f of
+2:41
+theta how to find the Theta Which minimizes F so how to find Theta star
+2:48
+Which minimizes
+2:55
+F this is where gradient descent comes into the picture uh people people working in the fields of optimization
+3:01
+have done so much work on uh gradient descent that now is the time when you
+3:07
+must be thinking why did we formulate machine learning as an optimization problem the reason we did that is
+3:13
+because we can Define the loss function and then we can optimize the loss function using gradient descent based on
+3:21
+which so much work has already been done in the past so essentially we convert
+3:26
+the machine learning problem to an optimization problem and and since we have so many techniques to solve that
+3:32
+optimization problem we are now in comfortable territory uh so let us learn about
+3:38
+gradient descent and uh what it really
+3:46
+means the one thing which you need to know throughout this particular lecture
+3:51
+which I going to write in a different color here so that we can come back to it again is that a gradient of a
+3:58
+function gradient of a
+4:07
+function gives the direction of steepest
+4:17
+Ascent uh I will further explain what it means but for now uh just keep this in
+4:24
+mind this is the intuition behind what is a gradient of a function and this
+4:30
+works in all Dimensions not just in one dimensional two dimensional but any
+4:35
+Dimension okay so uh let us look at a practical
+Gradient Descent 1D
+4:44
+Demo First we are going to look at it in one dimension and then we are going to move to two
+4:50
+Dimensions remember that the aim is that let's say there is a loss function f we
+4:56
+want to find that particular Theta Which minimizes
+5:05
+F so my goal in this section is for is to show you why gradient descent is so
+5:12
+intuitive and uh why it is quite obvious that this is the correct algorithm which
+5:17
+will work and I'm deliberately showing this to you through a practical demonstration so that you will never
+5:24
+forget it so let us say in one dimension the function f which we consider is f of xal
+5:32
+x² let's say this is the loss function in one dimension and our aim is to find that
+5:40
+particular X find that particular X Which minimizes
+5:50
+F correct that is the goal which we have now we know that we know how this plot
+5:56
+looks like right uh let's say we know that all of us know this is a
+6:02
+parabola which looks something like this uh the origin is here 0a
+6:08
+0 correct this is X and this is f which is equal to x² now the main thing here
+6:15
+is that let's say you had no understanding of how this plot looks like
+6:21
+visually all you have is this function and this may happen for complex
+6:26
+functions right we would not know the visual nature of all functions so imagine that you have no clue about this
+6:33
+plot I'm just showing this right now for demonstration purposes but imagine you
+6:38
+had no clue how this plot actually looks like then and also imagine that you are
+6:44
+the first person in the world who were tasked to to find the X Which minimizes
+6:50
+F how would you go about solving this problem imagine you are living in a time
+6:55
+when gradient descent was not invented you only have this function and you want
+7:01
+to find the X which minimizes this function how would you go about it okay the step one which probably you
+7:09
+might do as any person is start with a random
+7:15
+guess this is quite easy right anyone can do this um start with a random
+7:22
+guess let's say I start with
+7:27
+uh let's say I start start with an X1 whose actual value is equal to
+7:33
+9 in the plot that X1 appears somewhere over
+7:42
+here so let's say uh this is my first
+7:48
+guess which I have made X1 is equal to 9 now you only know that the value at X1
+7:56
+value of F at X1 is equal to 81
+8:01
+you do not know whether this is a minimum value or whether there are other values which exist other values of X for
+8:08
+Which F might be even lower you don't know that at this moment all you know is that you have
+8:14
+started with X and you have found out that the f is 81 now what do you do
+8:19
+next you want to find a different point after this point correct but you want to
+8:25
+move in a direction which gives you a lower value of if you cannot keep keep on finding these values or you cannot
+8:31
+keep on guessing random values of X in the step two we want to move in a
+8:37
+direction which actually decreases F from 81 to a value hopefully lower than
+8:45
+that and this is where we remember what we uh saw about the intuition behind a
+8:53
+gradient remember that the gradient of a function always gives the direction of
+8:58
+steepest Ascent so in this case since it's one
+9:03
+dimension the gradient is also equal to slope since it's one dimension the gradient is the slope of the function
+9:11
+and the gradient gives us the direction of the steepest Ascent let me actually
+9:17
+give you one more layer of intuition imagine that you are blindfolded and you are on a cliff but
+9:23
+the cliff is just one dimension you can move either left or you can move to the right and you want to get to the lowest
+9:30
+point of that Cliff so right now our situation is that
+9:35
+uh we have evaluated one point on the cliff and you have seen that the uh value is 81 now you don't know whether
+9:43
+to go to the left or whether to go to the right intuitively so what you check is
+9:48
+that you check that going left means that the ground is sloping
+9:55
+downwards so you are at a particular location on the ground and you intuitively know that going left you can
+10:01
+see that going left the ground is sloping downwards and going to the right the ground is sloping upwards so you
+10:08
+probably should not go to the right because the ground is sloping upwards you should probably go to the left
+10:14
+because the ground is sloping downwards that is why you decide to go to the left from this
+10:20
+point one more way to mathematically view this is since gradient is the direction of the steepest Ascent if we
+10:28
+go in the direction of negative of gradient that will be the direction of
+10:35
+steepest
+10:41
+descent and this is exactly what you figured out right so going in the
+10:46
+direction of negative gradient means going in the direction of negative
+10:52
+slope is the direction of steepest descent which means you're going down remember you are a person let's say
+10:59
+St in this one dimension and you want to know whether to go to left or right you see that to your right the ground curves
+11:06
+up to your left you see the ground slopes down so you should be moving to
+11:11
+the left you should be moving in the direction of descent and negative gradient or
+11:17
+negative slope gives the direction of the steepest descent so you would want to move in that direction correct so the
+11:24
+next X2 which you guess is not random but
+11:31
+you consider this factor and then you multiply it by the
+11:37
+gradient basically you move to the left hand side from this X1 you move to the
+11:43
+left hand side and you move in the direction of the gradient or the slope in this case
+11:50
+since it's one dimension uh and what is this n this n is the step size which you
+11:57
+take so so remember that you are blindfolded on this place and you can
+12:04
+only feel the slope and now you decide you want to go to the left that is correct but how
+12:09
+further do you want to go you also need to you cannot take too large of a
+12:15
+step and you cannot take too small of a step either because it will take a long time to
+12:20
+converge so this is a value which you have to determine yourself as you explore there is no way for you to right
+12:26
+now find the true value for this so I'm going to call this as the step
+12:33
+size So based on this intuition the X2 will be equal to 9 minus the step size
+12:41
+into gradient and as I mentioned gradient will be just equal to slope and that is the derivative of DF divided by
+12:50
+dx1 so let's say I say that my step size equal to15 we can choose it to be any
+12:57
+value uh and derivative will be equal to so if since
+13:03
+my function is x² the derivative of x² is equal to
+13:09
+2x uh so the value of my derivative at
+13:16
+Point X1 will be equal to 2 X1 so my X2 will
+13:22
+be15 into 2x1 which is equal
+13:27
+to 9 minus
+13:33
+uh5 into 2 into .9 so it turns out that the new value is
+13:42
+X3 is 6.3 so my X2 is equal to
+13:49
+6.3 so remember we had an X1 here X1 is equal to 9 and we move to the
+13:57
+left we move to the left and we move to X2 which is equal to
+14:03
+6.3 uh again very similarly we look at the slope at
+14:10
+X2 and we again decide to move to the left because on the right the slope is
+14:15
+moving upward and we want to go in the direction of descent so we again move to the left and then we will find X3 in a
+14:22
+similar manner so then X3 X3 will be equal to X2 minus the step
+14:33
+size into DF by dx2 so this will be equal to
+14:40
+6.3 -5 into 2x2 and this turns out to be
+14:51
+4.41 so my new X3 I again move to the right I again move to the left
+14:57
+sorry and I I get an another value of x3 uh and if you project it again
+15:05
+upwards I again find the slope of x3 and I again see that to the left the
+15:12
+slope curves downwards to the right it curves upwards so I again move to the
+15:18
+left I will continue doing this until I reach a point such as
+15:26
+this where I notice that whether I go to the left or whether I go to the right it's not making much difference there is
+15:33
+it's neither curving upward nor it's curving downward which means I in a stagnation
+15:38
+situation and I want to reach that stagnation situation which is my Minima so if I keep on doing these
+15:46
+iterations further I will find X4 I will find X5 I will find
+15:55
+X6 and ultimately I will reach X9 which will be almost close to zero and all
+16:02
+subsequent iterations after that will stay at that point since uh I am in the
+16:07
+stagnation zone now so
+16:13
+X9 so as I continue moving to the left I will reach a point where
+16:19
+X9 will be equal to zero and even if I try to move left or
+16:26
+right X10 X11 will also Al stay zero the function will neither show an increase
+16:32
+nor decrease which means I have reached a stagnation point which means that I have reached my local
+16:40
+Minima gradient descent is as simple as that imagine you are blindfolded on this
+16:46
+one dimensional Hill and you have to decide whether to move left or whether to move right so what you do you first
+16:53
+uh start at a random point then you see in which direction the slope is curving
+16:59
+to your left if the slope is moving down you move to the left to the right the slope is moving up
+17:06
+so you don't move to the right you always go in the direction of The Descent so you keep on moving to the
+17:12
+left where it's descent where it's descending until you reach the stagnation point where the ground is no
+17:17
+longer descending anymore that is your local Minima and this is the gradient descent
+17:23
+algorithm which is as simple as that uh and the way what what we have done right
+17:29
+now uh there is a mathematical way to formulate this which we will look at it
+17:35
+just at this moment so the mathematical way to formulate the gradient descent
+17:41
+algorithm is this and now you will appreciate it much better it's actually very simple you start with the
+17:48
+particular Theta which is a random guess which is Theta initial
+17:54
+okay and the first iteration is t equal to Z
+18:00
+and then you continue a loop which means you keep on iterating uh and then you increase the
+18:06
+value of T at each point so if t equal to 1 which means we are in the first iteration in each iteration you have to
+18:13
+update Theta in each iteration you have to update Theta and the way Theta is
+18:19
+updated minus F dash
+18:26
+of that's it this is the gradient descent algorithm it's as simple as
+18:33
+that the this step is the most important and you see this is exactly
+18:40
+what we kept on doing here right whenever we found one point how did we find the next point we subtracted the
+18:47
+step size multiplied by the derivative at that particular point this is exactly
+18:52
+what is mentioned here when you have found or when you have reached a particular point you subtract the step
+18:59
+size so this is the step size and multiplied by the gradient or
+19:06
+the derivative at that particular point now your question would be how
+19:12
+long should we keep doing this we should keep doing this until the value F stagnates or the value F does not
+19:19
+decrease too much further um and after you finish this
+19:24
+iteration you just return the Theta and this is the Theta Which minimizes
+19:37
+F so I deliberately did not start out with this mathematical formula because
+19:43
+first I wanted to show you that getting to this mathematical formula it's actually very
+19:48
+simple uh all we are doing here is that at every Point uh we
+19:55
+are we have to move in the opposite direction of gradient because remember gradient gives us the
+20:01
+direction of steepest Ascent so the negative gradient gives us the direction of steepest descent that's why we have a
+20:08
+subtraction term over here that's why the subtraction term exist because we have to move in the direction of descent
+20:14
+which is negative of gradient and the reason the step size is introduced is that it it's like if you take a very
+20:22
+large step size you may shoot on the other side right like imagine you started from X1 over here
+20:30
+uh yeah imagine you started from X1 over here and you took a very large step size you might end up on this side of the
+20:36
+function and then again you might end up here then again you might end up here so you will keep on oscillating without
+20:42
+ever reaching the Minima on the other hand if you take a very small step size it will take a huge
+20:48
+amount of time for you to reach the Minima so the step size should be a balance between large and
+20:54
+small okay uh this is the gradient descent in one dimension and I want to show you a python code before we move to
+Python code 1D
+21:02
+two Dimensions so whatever I have mentioned right now on the white board uh I have
+21:12
+written a python script here to simulate this exact same thing and I will be sharing this script with all of you the
+21:19
+python script is very simple we start with a position of nine as we did in the Whiteboard we use a learning rate of5
+21:27
+which is the same value we used on the Whiteboard and then we use number of iterations equal to
+21:33
+10 so what I'm doing here is that you can see the new point is the current
+21:38
+Point minus the learning rate into gradient this is exactly what we did
+21:45
+here new point is equal to current Point minus learning rate into
+21:50
+gradient and then I plotted the value for every single iteration so you see at
+21:56
+iteration number one this is the point x equal to 9 at iteration number two we move somewhere here at iteration number
+22:04
+three we further move so you see at each point we are moving to the left hand side initially started at x equal to 9
+22:11
+and we keep on moving to the left hand side slowly at iteration three we reach here at iteration four we reach here at
+22:18
+iteration five we reach here at iteration six we reach here and you see at iteration 7 over here at iteration 8
+22:26
+we are getting closer and at iteration 9 we finally reach very very close to zero
+22:33
+and at iteration 10 we exactly reach zero so we have reached the local Minima at iteration number
+22:39
+10 one way to visually see the way we are moving on the loss function is that
+22:45
+our points are in one dimensional that's correct but if you see the loss function we are always moving in a tangential
+22:52
+Direction so uh the way to think about this is that if you actually
+22:59
+our points are in one dimension that is fine but if you see the loss function U
+23:04
+at every at every stage so this is point equal to X1 uh to find X2 we moved in this
+23:11
+direction correct then we found X2 then we moved in this direction then we found X3 similarly so these directions are
+23:19
+actually tangential that's one more way to think
+23:24
+of the gradient so the gradient at a function is always in the T tangential direction to that function so we are
+23:30
+moving in the tangential Direction but in the negative of the gradient because the gradient is the steepest Ascent so
+23:37
+at this point the if you look at the gradient uh the gradient value will
+23:45
+point in this direction this is the steepest Ascent so
+23:50
+we have to move in the opposite direction that's why that negative sign is there uh I'll be sharing this python
+23:57
+script also with all of you so that you can visually see for yourself but please try running this script on your own
+24:03
+don't just look at this video but try running the code for yourself it will give you so much intuition about what
+24:10
+exactly is happening when we look at gradient descent now we will take one of my
+Gradient Descent 2D
+24:15
+favorite examples of gradient descent which is not covered too much in other courses we will look at the gradient
+24:22
+descent in two Dimensions okay so the loss function in two Dimensions is so
+24:28
+the loss function in two Dimensions is of course a bit more complicated loss function f and f of XY
+24:36
+which we are going to look at is x² + y s
+24:41
+okay this is the loss function and I want to find X comma
+24:47
+y or rather X star comma y star Which minimizes F
+24:58
+now first of all how do you even start to visualize
+25:04
+this function because this will be a threedimensional function right although
+25:09
+X and Y are in two Dimensions but this is equivalent to saying that Z = to x² + y square and that's equal to a
+25:18
+threedimensional plot in one dimension it was quite easy f of x squ this was just a parabola so
+25:25
+for the explanation purposes for me it was very easy but how do you explain this in two
+25:31
+Dimensions uh so remember that Z = x² + y Square which is actually our loss
+25:37
+function will now be in three dimensions and the way it will look like is what I
+25:43
+have shown in this python script the way it will look like is this this is the plot what this means is that forget
+25:50
+about the red line here for now what this means is that you take any X and Y there is a corresponding
+25:56
+F that's why it's a three dimensional plot and our aim is to find this thing
+26:02
+our aim is to find this Minima you see there is a Minima at the bottom which gives the lowest value of F this
+26:09
+point this point this is the local Minima our aim is to find the Minima here at the bottom which we do not know
+26:16
+right now this is an amazing visual problem right uh this is visualization
+26:21
+in three dimensions I highly encourage you to run this script in Python so that
+26:27
+you can visualize this script for yourself uh okay so now uh what we will
+26:35
+be doing is that very similar to the previous thing we do not know anything about this problem correct so let me
+26:42
+make an initial guess so let me make an initial
+26:48
+guess and my initial guess will be equal to 9A 7
+26:58
+and I have plotted this guess in this plot over here uh here you can see this is my
+27:06
+first guess 9A 7 this point uh and the loss function value for
+27:14
+this point is shown over here the loss function value for this point will be just equal to x² + y sare so the loss
+27:21
+function value will be 81 + 49 which is equal to
+27:27
+130 of course this is not my minimum loss function but I have to start somewhere
+27:32
+so I have to start here now let us use our learnings from
+27:37
+the previous example and let us say we want to move in the direction of descent so let me say that X2 so initial guess
+27:46
+X1 X2 is equal to X1 minus into
+27:54
+gradient now the question which you all must be asking is that now we are in two Dimensions right so what does gradient
+28:00
+really mean here what does it mean in one dimension the gradient means
+28:07
+the slope of the function but what does gradient really mean in two Dimensions here you are blindfolded and
+28:15
+you could go either left or right correct but in this particular problem you can go straight back you can go in
+28:21
+any direction basically and you are still blindfolded imagine that you are on a hill you can go left right front
+28:28
+back in two dimensional space you can go in any direction and you want to go in the direction which
+28:35
+minimizes uh or which goes in The Descent direction of that particular Hill so instead of the slope we have to
+28:42
+ask which direction should I go which so that I decrease the Lost function most
+28:47
+quickly this is the main difference between one dimension and higher dimensions in two
+28:53
+Dimensions uh in two Dimensions you have to ask the question
+28:59
+so in two Dimensions you have to ask the question which direction should I
+29:08
+go which direction should I
+29:13
+go uh to
+29:20
+decrease the loss function to decrease the loss function
+29:26
+most quickly
+29:34
+so remember that in one dimension there are just a line right
+29:40
+and if you are at a particular Point let's say at xal to 9 you could either go left or you could either go right but
+29:47
+in two Dimension you are somewhere here let's say the 9 comma 7 is somewhere here so
+29:54
+there is no left or right there is just Direction in space you want to decide which direction should you
+30:00
+go so that the loss function is minimized now
+30:08
+uh so you want to basically go in the direction which decreases the loss function most quickly
+30:15
+right which is that direction which
+30:22
+is that direction
+30:31
+which
+30:40
+decreases which decreases the loss function the
+30:51
+quickest um so which is the direction which decreases the loss function quickest in one Dimension we saw that it
+30:59
+was the negative direction of the slope right but how to visualize this in two Dimensions now I'm going to show you a
+Contour plot visualisation
+31:05
+beautiful visualization here this is what is called as Contour
+31:13
+plots Contour plots okay so let's say
+31:20
+uh I want to visualize uh so the threedimensional
+31:25
+plot looks like this right threedimensional plot looks like this that's fine but now if you fix one value
+31:34
+of Z if you fix one value of f so let's say f is equal to 1 so this just means
+31:42
+so if f is equal to 1 this just means x² + y sare = 1 and
+31:48
+that is a circle in two dimensional space so if I fix the value of F I can
+31:54
+show it in two dimensional space as well uh so let let me show you the different
+31:59
+Contour plots in two dimensional space there can be of course infinite Contour plots based on the value of f
+32:10
+correct I'm trying to do my best here with respect to the
+32:18
+drawing okay so these are the Contour plots and uh let me zoom in further
+32:26
+here so let's say this corresponds to this corresponds to FAL to 1 let's
+32:35
+say this corresponds to F = 5
+32:41
+uh and let's say this this plot corresponds to FAL to
+32:47
+130 so remember that uh our first point which we started with is 9A 7 and for
+32:54
+this point f is equal to 130 so this point will Li Li somewhere on this particular plot so let's say this point
+33:00
+lies somewhere over here so this is my X1 correct now from here we have to
+33:07
+decide which direction should I go so that uh the function decreases the
+33:12
+quickest right uh so imagine that this is FAL to
+33:20
+130 and let's say this is FAL to 140 and I want to go from
+33:29
+X1 in the quickest possible way from 130 to 140 which direction should I go let's
+33:36
+say I want the problem is simple I want to go from X1 which is on FAL to 130 to
+33:42
+FAL to 140 in the quickest possible way which way should I go if I go this way it will take me this much if I go this
+33:49
+way it will take me this much it turns out that the quickest possible way is the perpendicular
+33:56
+way this this way is the quickest possible way uh
+34:02
+to get from F fub1 to F2 130 to 140 so this is the direction of steepest Ascent
+34:09
+so this is grad F this is grad
+34:15
+F grad f is the direction of steepest Ascent so this you see is perpendicular
+34:21
+here this value so this direction is of the
+34:26
+fastest ass so if I'm at X1 and if I want to move very fast upwards so to increase F I
+34:34
+know which direction to go this perpendicular Direction because it takes me the fastest to the next Contour plot
+34:41
+but my question to you was which is the direction you should go which decreases
+34:46
+the function quickest so now which direction should you go the opposite
+34:52
+clearly so you should go in the opposite direction which is this direction
+34:59
+this and this direction is in the negative of gr
+35:07
+F so here I asked the question right you need to know which direction you need to
+35:13
+go instead of left or right and now we have figured out that the direction needs to be in the direction of negative
+35:20
+of gr F because positive gr f is the direction of fastest
+35:25
+Ascent so if the fastest Ascent is this way the fastest descent will be exactly
+35:31
+opposite which is negative grf so we need to go in this direction so we need
+35:36
+to go in direction of this Vector so if this is
+35:42
+X1 we need to go in the direction of this Vector negative gr F mathematically the way to calculate
+35:50
+gradient of f in two Dimensions is very simple it's a vector
+35:57
+the first first value is the derivative with respect to uh X and the second
+36:03
+value is the derivative with respect to Y and this is also called as partial
+36:08
+derivative since there are two
+36:17
+variables so let us see what this gradient actually means for the function
+36:23
+which we have considered is equal to do by do X this
+36:28
+also called do x² + y s and do by do y x² + y
+36:39
+s now if you take the first value which is d by DX or do by dox of x² + y sare y
+36:47
+is not dependent on X so that will be just zero so then this value will be just 2X and the bottom value will just
+36:54
+be 2 y since d by Dy of x² will also be zero
+37:00
+so the only thing which will survive here is 2 y so the gradient at any point
+37:06
+F grad F in two dimensional space is given by this so gradient of
+37:13
+F at 9A 7 will be given by 18 and
+37:23
+14 and uh this Vector will point in this direction the
+37:28
+orange Vector so negative
+37:34
+gradient 9A 7 will be equal
+37:40
+to - 18 and -4 this is the direction of steepest
+37:48
+descent from the point 9A 7 so if you look at this point which is
+37:55
+9A 7 over here the purple Vector is the direction of steepest
+38:01
+descent and mathematically it is given by minus 18 and
+38:07
+-4 now we have a way to find the next point so remember I mentioned here X2 is equal
+38:16
+to X1 minus step size into gradient and what this gradient was it will just be equal to grad F so the X2 will be is
+38:24
+equal to X1 minus grad
+38:32
+F at X1 grad I'm saying grad because it's
+38:38
+also short form for for gradient uh grad F at
+38:44
+X1 so then uh sorry this step size I forgot which will be is equal
+38:53
+to uh 97
+38:58
+minus step size is5 into grad F and grad F which we saw
+39:04
+was 18 and 14 correct so then it will be 18 and
+39:11
+14 uh we will use a step size of 0.1 over here to simplify the
+39:17
+calculations so then X2 will be 97 minus 1.8 and 1.4
+39:27
+which is equal to 7.2 and
+39:34
+5.6 this is my X2 so now I have started with an
+39:40
+X1 uh which was 9A 7 remember and then I have decided to move in this Purple
+39:47
+Gradient direction to give me X2 uh and my X2 will be equal to 7.2a
+39:54
+5.6 in three dimensions the weight it looks like is this so I have started
+40:00
+from this this point here and you see I have moved downwards here so now you can
+40:06
+see that I'm slowly moving towards the Minima which is at the bottom so I started from 9 comma 7 SE it's written
+40:12
+97 here then I move to the next point which is 7.2 comma 5.6 this is exactly
+40:18
+what we we had calculated here 7.2 and 5.6 so similar to the case of one
+40:24
+dimension now I will keep on doing this I will keep on finding X3 I will keep on
+40:30
+finding X4 and I will keep on doing this until I reach a stagnation
+40:35
+value which will be my Minima until I reach the stagnation
+40:42
+value which will be my Minima it turns out that for this
+40:47
+particular example which we have chosen we actually need around uh 15
+40:55
+iterations to we need around 15 iterations to converge to the Minima for
+41:04
+this particular example uh which we have chosen here and the way this looks like in uh
+Python code 2D
+41:12
+in three dimensions is seen from the plot over here you see first we start
+41:17
+from here then we move downwards let's go further
+41:23
+below as I move further down here here you can see three iterations have
+41:29
+proceeded and I'm moving downwards onto this threedimensional surface of the
+41:34
+loss function and uh when four points are there I I still am moving downwards
+41:40
+but I still not quite reached the bottom so if you see below this is iteration
+41:45
+number seven iteration number seven I'm slowly reaching down and I'm kind of at
+41:50
+the bottom but not exactly uh and as you go further below
+41:56
+you will see that okay this is iteration number 10 and I've almost reached at the
+42:01
+bottom and you will see that at iteration number 15 I'm completely at the bottom which is my local
+42:08
+Minima this is how I found my local Minima through gradient descent in a two dimensional input
+42:16
+space uh this is the beauty of the gradient descent algorithm it works for any Dimensions so this same algorithm
+42:23
+which I wrote before right let's go here
+42:30
+and let's zoom over here this same algorithm earlier I had written
+42:36
+uh for only one dimension correct but the only thing which now changes for
+42:41
+multiple directions or multiple Dimensions is this everything else Remains the Same
+42:47
+the loop Remains the Same uh this Remains the Same the only
+42:53
+thing which changes is Theta is equal
+42:59
+to the earlier Theta
+43:05
+minus step size into gradient of
+43:11
+F at Theta T minus one you see everything has Remains the
+43:19
+Same but just We have replaced the derivative with the
+43:25
+gradient and what is what is this gradient of f in multiple Dimensions we saw that in two Dimensions the gradient
+43:32
+of of f was just DF by DX and DF by
+43:39
+Dy in two Dimensions this same thing extends for
+43:46
+more Dimensions as well so for three dimensions the gradient of f will be a
+43:52
+three dimensional Vector DF by DX X DF by Dy and DF by
+44:01
+DZ or DF by DZ uh if we move to 10 Dimensions or
+44:09
+higher Dimensions this gradient operator will just keep on increasing in size
+44:15
+similarly we will just have more variables here we added one variable in 10 Dimensions we'll have 10
+44:21
+variables but the mathematical representation of the gradient descent algorithm is just given by this one
+44:29
+command and I hope how you I hope that now you understand how this command
+44:35
+works not just in one dimension uh here you saw how it works in one Dimensions but I made an effort
+44:41
+to show you how this command Works in two dimensional as well in two Dimensions also we can uh actually start
+44:49
+from if our loss function is looks like this we can start from a point we can start from a random guess and then we
+44:56
+can use gradient descent to converge to the Minima and gradient descent is just
+45:02
+quite simple because see in one dimension we have to decide whether we have to move left whether we have to move left or right right so you blind
+45:10
+fold folded in one dimensions and you have to decide whether to move left or right in two Dimensions you have to
+45:16
+decide uh which direction to go in the XY space so you can go you can go
+45:23
+forward backward Left Right anywhere you can go so you need to decide the direction so in one dire in one
+45:30
+dimension the direction was just negative of the
+45:35
+slope but in two direction it turns out that the direction was negative of grad
+45:40
+F or the gradient of f in two directions we also saw a very
+45:45
+nice visual representation of what it means by a gradient of f it means the
+45:52
+fastest direction we can go from uh the fastest direction of increase
+45:58
+of grad F because if you are at this point which direction should you go to reach to the next Contour plot the
+46:05
+quickest and that's the perpendicular Direction which is exactly grad F Direction steepest Ascent so grad f is
+46:13
+steepest Ascent but we have to go in the direction of steepest descent so we have
+46:19
+to go in the direction of this purple line so mathematically the this Vector
+46:25
+is just 2X and 2 y so it is
+46:30
+uh 18 and 14 and the purple Vector which we saw will be just negative of that
+46:37
+which is min - 18 and -14 so we just update X2 by subtracting the step size
+46:42
+multiplied by the gradient of f so this is a vector operation in two dimensional
+46:48
+space this is a vector operation in the 1D example it was just a scalar but now
+46:54
+you can do the same for any dimensional space for three dimension space this will just be a vector of three uh
+47:01
+quantities it will be very difficult to visualize it in four dimensions the loss
+47:06
+function because as human capabilities it allows us to visualize stuff only in
+47:12
+3D uh so I have restricted the visualization to 3D in this
+47:17
+case Okay so this is the intuition for gradient descent and this is the
+Conclusion
+47:23
+gradient descent algorithm uh which we studied right now using this
+47:30
+same algorithm in the next lecture we are going to find the optimum
+47:35
+Theta um for the logistic loss regression
+47:40
+because now you have everything you need you have the hypothesis um you have the
+47:46
+hypothesis which is let me zoom in here
+47:58
+you have the hypothesis which is the sigmoid that is there you have the loss
+48:04
+function which is cross entropy and you also have the algorithm which finds the Theta which
+48:10
+minimizes the loss function essentially now you have everything to find the
+48:16
+optimal Theta so in the next lecture we will be
+48:22
+looking at gradient descent algorithm applied to uh minimizing the cross
+48:28
+entropy loss function using the sigmoid hypothesis and uh we will look at how
+48:35
+the gradient descent algorithm performs on the logistic loss regression um or the logistic loss
+48:44
+classification thank you so much everyone for uh attending this particular lecture and I hope you
+48:52
+visually understand what gradient descent means now and also mathematically understand it I didn't just go through
+48:59
+the mathematics and I deliberately showed you these visual things so that you can clearly understand what we are
+49:05
+trying to do here and develop an intuition for it once you have a strong intuition for gradient descent it will
+49:11
+help you in every single stage of machine learning because this algorithm comes up everywhere even in deep
+49:18
+learning even in back propagation when we look at optimizing neural networks the foundation lies always in gradient
+49:25
+descent so so it's very important that you have this this Foundation strong
+49:31
+thank you so much everyone and in the next lecture we will be looking at the last lecture of logistic classification
+49:37
+thank you
