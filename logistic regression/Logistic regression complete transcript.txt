@@ -1,0 +1,948 @@
+
+Search in video
+Introduction
+0:00
+hello everyone welcome to the day 20 of the machine learning teach by doing
+0:06
+project in the previous lecture we learned about regularization and uh we looked at the
+0:14
+intuition behind regularization and why regularization
+0:19
+actually uh helps us to prevent the model coefficients from becoming too
+0:24
+large this helps us to prevent overfitting or it really helps us to
+0:30
+prevent capturing the noise in the data overall regularization pushes our
+0:36
+machine learning algorithm to become simple so that we can have a good performance on the test
+0:43
+data if you want to have a clear understanding of regularization and why
+0:49
+the regularization term looks like this mathematically where this is the magnitude of theta what is Lambda
+0:56
+Etc um I really encourage you to take a look at the previous lecture it's a short lecture but it will really give
+1:02
+you a good understanding of regularization which will help you follow today's
+1:08
+lecture so what we will be doing in today's lecture is that we'll be taking
+1:13
+the concepts which we learned yesterday and we will be having a practical implementation of regularization with a
+Dataset
+1:20
+uh complex data set in Python itself so this is the Hands-On uh
+1:26
+tutorial where I'll be going through a data set and through this process you will also learn about feature selection
+1:35
+feature representation and the choice of Lambda
+1:40
+in regularization why regularization is needed Etc we will compare without
+1:46
+regularization and with regularization as well so many people have commented on YouTube about
+1:53
+uh the need for features and how to select features which power of the
+2:00
+features to use Etc so we will get that clarified also in today's lecture so
+2:05
+let's get started first I want to show you the data set which we are dealing with the data set looks something like
+2:13
+this uh there are two classes of the data set this is the first class which kind of looks like it spread in the
+2:20
+Inner Circle and here's the second class which kind of looks like it spread on a circle of a larger radius which is a bit
+2:28
+outside uh in the Excel format this data looks something like this here you can see up till the row
+2:35
+number 58 we have data set which is numbered as one and from
+2:42
+row number 58 to row number 11 uh 118 we have the data set which is numbered as
+2:51
+zero uh so this is the data set which we will also be importing it into python
+2:56
+but visually it looks something like this it looks like the data is spread along concentric
+3:02
+circles um okay then the goal is that imagine someone is asking you this in an
+3:09
+interview uh think of yourself as an ml engineer
+3:14
+so I'm asking you that based on this data set generate a
+3:22
+classifier for the above data set
+3:34
+so let me also show The X and Y axis here this is X2 sorry this is X1 and this is
+3:42
+X2 okay so imagine you are a machine learning engineer and you have been asked this question that you have to
+3:48
+generate a classifier for the above data set the first thing which you should
+3:53
+notice is that the classifier the decision boundary will not be a straight
+3:59
+line here the decision boundary will not be a
+4:06
+straight
+4:14
+line uh it looks like the decision boundary has to be a curved boundary here which
+4:21
+probably looks something like this visually and it does not look something
+4:28
+like a straight line so the representations which we have
+4:34
+earlier Theta 1 X1 + Theta 2 X2 + Theta not equal to Z won't work
+4:42
+here now this immediately should lead you to your next conclusion as a machine learning engineer that you will need to
+Features
+4:49
+use the feature representation trick here you will need to use the feature
+4:55
+representation trick remember what we saw for features before that data which
+5:00
+does not look to be linearly classifiable so this does not look to be linearly separable right in two
+5:07
+Dimensions uh so data which is not linearly separable or data which does not look like it can be linearly
+5:12
+separated in two Dimensions we can project the data from a 2d space into a higher space and try to find the
+5:20
+separator over there this is the feature representation trick we have a video for
+5:25
+that in the previous in one of the previous lectures of the course so I encourage you to check that video out
+5:31
+but feature representation helps us to take data which is not linearly classifiable in 2D Space Project it onto
+5:38
+a Higher Dimension so that it is linearly classifiable this is pretty
+5:44
+understandable right because let's say if you do not project the data into higher dimensions and let's say if your features are just one X1 and
+5:51
+X2 this is the order one feature these are also called order one
+5:56
+features uh order one which means I'm not projecting it to higher Dimension
+6:02
+I'm not using the feature representation trick using using this order the
+6:07
+classifiers which you will be able to construct will look something like something Theta 1 X1 plus Theta 2 X2
+6:14
+plus Theta not equal to zero so they will look like straight lines and we know that straight lines in 2D space
+6:21
+will not separate this data so we should not restrict ourselves to order one here we should look at higher orders so order
+6:28
+two looks something like this this means projecting the data to a
+6:35
+higher order space of Dimension two so here we will not only have one X1 and X2
+6:41
+but we will also have X1 X2 X1 s and X2
+6:47
+Square uh so due to the addition of squares now the underlying equation can
+6:53
+look a bit more complex the underlying equation can look like Theta 1 X1 Plus
+7:00
+Theta 1 X1 + Theta 2 X2 + theta 3 X1 s +
+7:06
+Theta 4 X1 X2 equal to0 it can look something like this and this looks like
+7:12
+it's parabolic it's a bit more complex so hopefully it can classify this data
+7:17
+remember we are in a circular space it looks like here right so X1 squ + X2 Square that's the equation of a circle
+7:24
+X1 sare + X2 Square equal to some radius so intuitively it looks like we we
+7:29
+definitely need to have X1 square and X2 Square so it looks like we definitely need to go to order
+7:36
+two uh we will also explore order higher orders in our code but just to show you
+7:44
+mathematical uh version as you go to higher orders the number of terms which we have they go or increasing
+7:51
+exponentially so right now in order two we had how many terms 3 four five six right in order three you will see that
+7:58
+you will have much more terms you'll not only have the terms which you had in order two but you will also have these
+8:05
+terms X1 squ X2 X1 X2 s X1 Cube and X2
+8:13
+Cub these are nine terms this is for order two in complex machine learning
+8:19
+algorithms as we'll also explore today we can even go up to order number 20
+8:24
+imagine the number of terms which will be present in order number 20 but some machine learning algorithms require us
+8:31
+to do that remember that in machine learning we have no problem with being
+8:36
+in higher Dimension space machine learning can be thought of as an act of converting lower Dimensions to higher
+8:43
+Dimension space even neural networks do that neural networks take an input let's say of two Dimensions expand them into
+8:50
+higher dimensions and then again bring it down to two Dimensions it's just that as humans we
+8:55
+cannot imagine spaces more than dimensions three so so on the Whiteboard we can only have representations for
+9:02
+Dimensions 1 2 and three so the second intuition we have with respect to this
+9:07
+data set is we definitely need to transform our data using this feature representation
+9:13
+trick and these type of bases are also called as polinomial feature
+9:20
+bases this is called as polinomial feature bases where the order one means
+9:26
+polinomial of order one order two means Pol pomal of order two order 3 means
+9:31
+polom of order 3 Etc the third thing which we'll need to
+Regularization
+9:37
+be doing is regularization as we saw in the last lecture in regularization our objective
+9:47
+function let me pull up my notes over here
+9:59
+in regularization our objective function looks something like this J of theta is
+10:06
+equal to -1 by n Sigma this is the cross entropy loss
+10:13
+function into
+10:21
+uh into log of H
+10:26
++ 1 - Y into log of 1 -
+10:31
+H but this objective function does not stop here we have one additional term
+10:37
+here which is Lambda into Theta squ /
+10:43
+n this is the objective function which we will minimize so the only addition is
+10:49
+this part this is also called as the regularization term this will be
+10:55
+added so now let us compare how the different things look like for
+11:01
+regularization and without regularization so I'm going to make a table here right
+11:06
+now so let's say we have no regularization in one
+11:13
+case and we have regularization in the other
+11:22
+case and I'm going to compare the following quantities I'm going to first compare
+11:29
+compare the loss so let us see what the loss will look like so in the case of no
+11:35
+regularization the loss looks something like this minus 1 by as we saw this is the cross entropy loss Sigma
+11:43
+y log H + 1 - Y into log of 1 -
+11:51
+H correct whereas in the regularization it
+11:57
+will look like uh - 1 by n Sigma y log H + 1 -
+12:07
+y log of 1 - H + Lambda into modulus of
+12:13
+theta s / n remember that when I'm saying H here I mean the sigmoid
+12:22
+hypothesis that's the first quantity which we compared the second quantity which we
+12:27
+will compare is the gradient so when we don't have any
+12:34
+regularization uh we have seen in one of the previous lecture that the gradient term actually looks something like this
+12:41
+x transpose H minus y where H is just the sigmoid which is
+12:47
+Sigma of X Theta now if you have the regularization
+12:54
+this term will look like something like this the first part will remain the same
+12:59
+M plus there will be an additional component here which which will need to
+13:06
+be added and that component will look something like this + 2 Lambda Theta
+13:13
+upon n so here let me call it Theta Tilda because here we have
+13:18
+to basically put the biased term to zero so the
+13:25
+entire Theta will remain the same but just the biased term will be C off and it will be put to zero that's why I'm
+13:31
+calling it Theta Tilda so you can see that the gradient term is exactly the same except for the fact that this
+13:38
+additional quantity has been added here that is because you try differentiating this with respect to Theta you'll get
+13:44
+something like this written in The Matrix form and finally the gradient
+13:54
+update the gradient update will look something like
+14:02
+this the gradient update Theta I + 1 is equal to Theta i - Alpha * X
+14:12
+transpose H - y by n so this is just subtracting Alpha times the gradient and
+14:19
+here it will be Theta I + 1 is equal to Theta i - Alpha
+14:26
+* X transpose h - y by n + 2 Lambda
+14:34
+Theta by n so here we are just uh so let me add the alpha will be here
+14:42
+also Alpha because the alpha which is the learning rate will be multiplied on both
+14:48
+sides uh great so in the last step I have just used the same gradient as above but
+14:55
+added the learning rate parameter over here so in the entire process in all of these algorithms if you see in the
+15:03
+regularization term so sorry if we use without
+15:08
+regularization there is only one hyper parameter which is this learning rate whereas if you use regularization
+15:16
+there are two hyper parameters there is Lambda and then there is also the learning
+15:23
+rate so just keep these quantities in mind so that when we look at the code
+15:28
+you will appreciate iate the code much much more if you remember
+15:33
+uh if you remember these terminologies or if you remember these quantities
+15:41
+correctly uh okay so now uh we will be jumping into python code uh for this
+15:49
+particular data set and uh we will be doing feature representation on the data
+15:55
+set we will be doing two cases first we will be showing the results with no
+16:01
+regularization and second we'll be seeing the results of regularization we will explore using
+16:07
+different features how having the different order changes our model prediction we will also explore the
+16:14
+effect of this Lambda parameter here and overall we'll explore the effect of no
+16:19
+regularization versus regularization so let us get
+Python code: No regularization
+16:26
+started great so I have jumped into to this code right now which is in vs code
+16:31
+and uh I'll also be uh sharing this entire code with you so no need to worry
+16:37
+about that let us understand this code step by step and what we have done first
+16:42
+we load the required packages here we have been using numai and mat plot lib
+16:48
+pretty much all the time throughout this series but today I have loaded one more
+16:53
+package here which is called caborn and caborn is an amazing python package C
+16:59
+for plotting so you can just head over to Google and search C born in Python and
+17:06
+you will see that it's a very good packaging tool for data visualization and using cbor you can generate some
+17:12
+wonderful data visualization plots then I also import imported optimize I'll show you where this
+17:19
+particular function is used in fact I don't think I'm using it anywhere so we can probably remove it also so let me
+17:25
+first run this first code block that is done the packages are loaded the Second Step which we need to
+17:32
+do is load this particular data set so uh this is the data set which is in CSV
+17:38
+format what I have shown you over here so please look at this code and try to
+17:44
+understand what I have done here so np. load txt which means that it's a txt file and I'm loading this particular
+17:50
+file correct and then I'm just extracting the X data and the Y data so
+17:58
+let me run this this and show you what X and Y look like so if I plot X it will look
+18:05
+something like this which is the X1 and X2 so it looks like so this is X1 and
+18:12
+this is the X2 which is the x coordinate of the data and the y coordinate of the
+18:17
+data uh so similarly I think we have around 120 data points so this is the X
+18:22
+and if I plot y it will look something like this so Y is the true label so the
+18:28
+first 58 points will be one and the next 58 points will be labeled as
+18:34
+zero so look at how we have extracted the data here and uh how we have uh
+18:40
+generated the input data and the output data that's the first step another step
+18:45
+is that here I showed you this visualization right but when in real life you are given the data you will
+18:51
+just have the CSV file so see how many things we understood from the
+18:57
+visualization we understood that the linear classifiers won't work we understood that probably an order two
+19:03
+would be needed since the data looks to be circular correct so that is why visualization of the data is so
+19:09
+important so we are using the cbor command called SNS here so SNS the
+19:15
+command is scatter plot SNS do scatterplot we are basically just plotting the data so if I plot this it
+19:22
+will look like this what I showed you basically it looks similar to this the orange data points are classified as one
+19:30
+and the blue data points are classified as zero it looks like the orange data points kind of lie within an inner
+19:36
+circle and the blue data points kind of lie within an Outer Circle clearly from this data it is not
+19:43
+linearly separable now we are going to be using logistic regression and just like we
+19:50
+have seen in this table over here we will need three things we will need the loss we will need the gradient and we
+19:55
+will need the gradient update we already have the formula for all of this so we have no reason to worry also wherever I
+20:03
+have written H here it's the sigmoid function so of course we'll need to define the sigmoid function initially so
+20:09
+here you can see that when we get started first we Define the sigmoid function which is 1 upon 1 + e to minus
+20:16
+Z if you have forgotten what the sigmoid function visually looks like it looks something like
+20:25
+this where this is one and and it crosses the xal to 0
+20:32
+at05 this is how so if you have Z and this is Sigma of Z mathematically this
+20:40
+function is 1 upon 1 + e to minus Z and my hypothesis is Sigma of X of
+20:50
+theta in one of the previous lectures we have seen that this x is an augmented X
+20:58
+where we add a column of ones to the X data uh so the X data actually 1 1 one1
+21:07
+and then we have X1 X2 similarly so we add this column of ones and the reason
+21:13
+we do this is because we have assimilated Theta not within the Theta Vector itself so instead of having the
+21:19
+Theta vector and the bias term separately this one Theta now contains Theta 1 Theta 2 and it also has Theta
+21:26
+not in that Vector itself if we did not have this augmented term
+21:32
+we'll need to have a separate Theta 1 theta2 vector and a separate Theta not Vector but this what it does is that it
+21:38
+merges everything into one Theta 1 Theta 2 and Theta and that really helps the
+21:45
+calculations okay so first we have defined the sigmoid function here next we will Define the loss
+21:51
+function now look at what the loss function is loss function is - 1 by n
+21:57
+Sigma y log H + 1 - y log 1 - H and H is Sigma of X Theta this is exactly what
+22:05
+has been done here first you define H H is sigmoid of X do product of X and
+22:10
+Theta and then you calculate the loss like Y into log H + 1 - Y into log 1 - H
+22:17
+and you divide by - 1 by n length of Y is basically n which is the number of
+22:22
+data points which we have this is exactly the same formula which we had written here for the loss function
+22:30
+uh then we have to write a formula for the gradient and we have already defined
+22:35
+that here the gradient is just simply X transpose H - y / n so if you see the
+22:42
+gradient here x transpose hus y / n and first we Define H as the sigmoid of X
+22:50
+multiplied Theta or the dot product between X and Theta which is exactly what we had written
+22:57
+here great so that's out of the way the sigmoid function is defined the cross entropy loss function is defined and the
+23:03
+gradient is defined essentially we are all set now except for the fact that we have not done the feature trick yet
+23:10
+remember we have to do a feature transformation here because order one
+23:16
+will not work so here is a code which has been written uh which implements the feature
+23:22
+trick for any particular order so if you look at this code here right now what it
+23:28
+does is that it takes X1 and X2 and it also takes another parameter which is the power this power is basically just
+23:35
+the order which I have mentioned over here basically if the order is equal to
+23:40
+one this function will return return three terms 1 X1 and X2 if the order is equal to two this
+23:47
+function will return return six terms 1 X1 X2 X1 X2 X1 square and X2 square if
+23:55
+the order is three or if the power is three this function fun will written nine
+24:00
+terms as I've written here so this function is written such that we can specify any power here and it will
+24:07
+return those many feature matrics uh I am not going to go into the
+24:14
+mathematics of how this particular code has been written because I think that is besides the point I do not want to show
+24:20
+you right now why this is X1 into I minus J Etc you can figure that out on your own it's pretty simple when you
+24:26
+write it on your own just start with power equal to one and write down what this Loop says one by one on your
+24:33
+notebook you'll understand what has been done here essentially we are starting with an array and so let's say if we
+24:39
+have power equal to two step by step new elements are being added into the array first one is added then X1 is added then
+24:46
+X2 is added then X1 square is added then X2 square is added then X1 X2 is added
+24:52
+that's what this np. append is doing so this is my feature expand
+24:57
+feature function and this will allow me to convert my data set into other features which will expand it
+25:05
+from a twood dimensional space to a higher dimensional
+25:10
+space uh okay then what we do is we Define the gradient descent so up till
+25:16
+now we have uh we have defined the loss we have defined the gradient
+25:22
+but we have not defined the gradient update this is what uh this is what
+25:27
+we'll be doing now now so up till now we have defined the loss defined the gradient but we have not defined the
+25:32
+gradient update this is what we'll be doing now so uh here is
+25:38
+the uh function it exactly follows this we will just take the Theta and we'll
+25:43
+subtract Alpha * X transpose H - y by n
+25:49
+so that's exactly what's done here you take Theta and you subtract Alpha * X transpose hus y by m where m is the data
+25:56
+size length of Y which is the length of the data set that's it so this is the
+26:01
+update rule in the gradient descent and now we Define the final
+26:07
+function which brings everything together which is logistic regression it takes in the argument as input data the
+26:14
+output data the power which we want to Define uh for the feature trick or the
+26:19
+order as I have written in the Whiteboard Alpha is the learning rate and the number of iterations which we
+26:25
+want to pursue is 100 so essentially there are actually three um hyper
+26:31
+parameters here earlier I had mentioned that there is only one hyperparameter learning rate but actually there are
+26:37
+three hyper parameters there is uh there is a learning rate Alpha there
+26:42
+is the order of the features and then there is the number of iterations and we can vary all of this
+26:49
+to find a good algorithm basically okay so what this logistic
+26:57
+regression does is that when it receives the data set it first expands the features based on the order which we
+27:02
+have defined so what it does is that if this was not there then it would just take
+27:08
+the data set like it is but it expands the features based on the power which we have defined so if the power is two it
+27:14
+will take it to a higher Dimension plane if the power is 20 it will take it to a 20 Dimension
+27:20
+plane uh and then that's it then it just implements the gradient descent um and then it continues this
+27:27
+Loop step by step and finally we have the updated Theta which is returned or
+27:32
+which is the final answer at the end of 100 iterations um okay now let us actually
+27:39
+perform this logistic regression and implement it on our data set so as a
+27:44
+machine learning engineer you have reached up till this point you have defined the features or you have defined
+27:49
+a function you have defined the final logistic regression function you're ready now all you need to do is specify
+27:56
+the hyperparameters uh let's say the learning rate is fixed
+28:02
+for now 0.01 which means that there are two other hyperparameters which you can vary you can vary the power and you can
+28:09
+vary the number of iterations I'm going to start with a power of 20 which means
+28:14
+I'm going to expand the data into 20 dimensional data set as humans we cannot even imagine what this will look like
+28:20
+and it will probably contain hundreds of thousands of features a power of three itself
+28:26
+contains nine features so you can imagine um what a power of 20 will contain how many
+28:31
+features and I'm going to do this for 20,000 iterations because this data looks to be a bit
+28:37
+complex uh so let's go ahead and let's implement this algorithm for a power of
+28:43
+20 number of iterations as 20,000 and here the learning rate I'm using as 6
+28:49
+just for reference so I'm going to run this piece of the code now you see it's taking a bit of time
+28:56
+because we have 20,000 ations which need to be completed um usually machine learning
+29:03
+algorithms won't run as quickly as what we had earlier demonstrated on toy
+29:08
+problems or toy data sets and they do take some time especially if you have a
+29:15
+larger number of iterations uh that's why if you have a
+29:20
+computer or a CPU with a higher processing power or with a higher processing speed then it generally good
+29:26
+because uh if you have large amount of data it can
+29:31
+process that data relatively quickly or in a relatively short amount of
+29:45
+time okay so it has been completed it took 1 minute and 20 seconds for the
+29:51
+computer to run this and I've printed the accuracy right now the accuracy seems to be 86% on the uh data set which
+29:59
+is quite good which means it classifies 86% of the data set correctly the last
+30:05
+step which we have to do is visualize the classifier which means we take the data set and then we plot the decision
+30:10
+boundary you can have a look at this plotting function I'm not going to explain this function but I'll just
+30:16
+mention the things which I've used I've used a function called as Contour which gives me a contour plot between
+30:24
+the uh data and my prediction value uh through my classifier and that helps me
+30:31
+to plot the Contour for the classifier and then I plot the Contour on the scatter plot of the data so let me click
+30:38
+on this run function to visualize the Contour now uh so this is very important because
+30:46
+this function will ultimately let you know how the decision boundary looks like okay so it seems that our decision
+30:52
+boundary looks like this and you can already see that this is a very good example of overfitting
+30:58
+our algorithm seems to have gone out of the way to really capture the noise in the data and really fit those things so
+31:04
+this is the perfect example of overfitting see everything looks to be constrained for the orange points around
+31:11
+this circle right and this point which the algorithm has tried so hard to capture what if it's just
+31:18
+noise since we did not add regularization right now our algorithm has essentially captured this noise also
+31:25
+that is a big problem for us because let's see if if I give you test data up till now I've only shown you training
+31:31
+data but if I give you test data which lies somewhere here let's say it lies here the test data it lies here what is
+31:38
+being shown in the arrow uh our algorithm will basically
+31:43
+mark it as orange but it clearly looks like that belongs to the blue category
+31:50
+because the blue category is all spread out like this uh let me show you what I mean uh in this whiteboard actually
+31:59
+so let me go to this the same plot which I have
+32:13
+correct yeah let me just make a new plot so that the understanding will be
+32:23
+easier Okay so what my classifier is doing currently is
+32:33
+that it has this orange data
+32:38
+points it has these orange data points somewhere
+32:45
+here and uh the blue data points are somewhere
+32:51
+here let me Mark it in blue the the blue data points are
+32:59
+somewhere here
+33:05
+correct now what my algorithm has done is that it actually has gone out of its
+33:10
+way to even classify these two points these two points over here so this is
+33:17
+the boundary which it it has made uh this boundary so the algorithm
+33:25
+will classify everything inside this as below belonging to the orange glass now think about a new point which
+33:32
+is the test data which which I have given somewhere here or if a test data is given
+33:39
+somewhere here it clearly looks like this test data belongs to the blue right because the orange function looks to be
+33:46
+in a circle of lower radius and these points are maybe just the outliers so
+33:52
+the actual plot which we wanted was something like this we should have ignored these two
+33:57
+points as noise in the data and if this was our actual plot then these two green
+34:03
+points would be correctly classified as blue but now they will be long wrongly classified as orange because our
+34:10
+algorithm has overfitted and it has given importance to this noise this noise in the data and classified them as
+34:17
+everything here will be classified as orange that is what is meant by overfitting and this is the main problem
+34:24
+which arises if you don't use regularization now what I'm going to show you is the
+Python code: Regularization
+34:31
+exact same thing but with regularization not many things will change as you will see first we'll
+34:37
+Define the cost function or the loss function the loss function is also called as cost cost function sometimes
+34:45
+so let us look at our table again which is our reference point the loss function is the same as the cross entropy no
+34:52
+regularization loss which is - 1 by n y log H + 1 - y log 1 - H but we'll add
+34:59
+this Lambda * modulus of theta Square by n this is exactly what is done here this
+35:06
+is the cross entropy loss up till here but we add one more term here which
+35:12
+is Lambda * Theta Square by n correct so this is the loss function
+35:17
+which has been defined for regularization then now let
+35:22
+us look at the gradient the gradient for the regularization is X trans H - y by n
+35:29
++ 2 Lambda Theta by n which is the same here x transpose H - y by n this is
+35:36
+length of Y plus 2 Lambda Theta by n now I told you that this is Theta TAA
+35:43
+right so the one thing which we modify in this Theta is that we take Theta but we replace the first element with zero
+35:51
+which means we are replacing the bias term with zero since we are taking the derivative the bias term won't have that
+35:57
+will basically drop out that's why it's called as Theta 1 so Theta 1 is same as
+36:03
+Theta but with no bias term there so this is that additional term which is 2 Lambda Theta by n which comes up in the
+36:09
+regularization this is exactly what has been written here 2 Lambda Theta by
+36:16
+n the next thing which we'll be doing is implementing the gradient descent the gradient descent algorithm also is we
+36:24
+subtract um this thing X transpose hus y by n plus 2
+36:30
+Lambda Theta by n from the current value of theta and multiply it with the learning rate this is exactly what is
+36:37
+done we take the Theta and we subtract X transpose hus y by n plus 2 Lambda Theta
+36:42
+by n where here it is written as M which is the length of the data set what is
+36:47
+written as M here is what we had written as n here in this white board so this is the gradient descent
+36:55
+and the final logistic regression Alor gthm or the final thing which puts all of it together is the same as for no
+37:02
+regularization first we expand the input to a higher Dimension space then we
+37:07
+implement the gradient descent that's it then we keep on updating the Theta and then we return the Theta or we finalize
+37:14
+the Theta based on the number of iterations now you can see here that there are four free parameters or rather
+37:20
+four hyper parameters so along with these three so these three were there for no
+37:30
+regularization along with these three there is one more hyper parameter which is
+37:35
+Lambda which is this parameter here this uh that is for
+37:43
+regularization and this is also a parameter which we need to Define before the training and that's why it's called
+37:49
+as hyper parameter okay so now let us proceed
+37:54
+with the training and but first let us Define the hyper par meters here let us
+37:59
+Define the same power and number of iterations as we had done above 20 and 20,000 this is the same thing which we
+38:06
+had done here correct and this is the same thing which we'll use here also and
+38:12
+we'll use Lambda to be equal to 1 let's just start with this to see how it is proceeding and then we'll explore
+38:18
+further so let me now run this very similar to the previous run this will
+38:24
+also take a bit of time previously I waited for 90
+38:29
+seconds I think this will also take roughly around that time or maybe higher because we are doing one more
+38:36
+gradient uh calculation which is needed for the regularization so let me wait for that much
+38:42
+time okay so uh finally I could see that this iteration was completed and it took
+38:50
+a long amount of time so I had loaded a previous version which I had had worked
+38:57
+on my system and I'm presenting that to you right now but remember that running this algorithm can take a bit of time so
+39:04
+please be patient um so here first of all I can see that the accuracy is 72%
+39:11
+which is a bit lesser than the accuracy which I had obtained earlier and this is generally the case with regularization
+39:17
+in regularization we don't try to fit the entire training data exactly and so
+39:22
+it it we take a hit on our accuracy uh so it took around 5 minutes
+39:28
+5 seconds for me to run this thing uh which is more than two times what it
+39:34
+took to run the previous one because here probably more gradients were calculated so it took more time but the
+39:40
+accuracy is less that's the first thing we see now let us visualize the
+39:46
+results um so I have clicked on this particular visualization which is the same code as what is for the previous um
+39:55
+so here you see this is how the decision boundary looks like can you see how different it is from the decision
+40:01
+boundary which is here what this decision boundary has done is that look
+40:06
+at this this point this point uh look at this Orange Point this decision boundary
+40:13
+has classified this point as noise and it has not at all tried to fit that
+40:18
+point this is amazing right now consider a training testing data which lies somewhere here in this particular case
+40:26
+that point will be classified as blue which is probably correct since all blue points seem to Liar but if we were to
+40:34
+take the previous case and if you look at a point here this point will be classified as orange this is the
+40:41
+disadvantage of overfitting and after we used regularization our model accuracy
+40:47
+is definitely reduced that is fine we don't need to fit all the training data accurately we need to make sure that our
+40:54
+model is simple and it is generalizable enough which means it does a good performance on the testing
+41:00
+data I hope you are able to see the advantages of regularization right in
+41:06
+front of our your eyes using this one more thing which I want to show you all
+Hyperparameter tuning
+41:11
+is that one more thing which actually contributed to overfitting is the use of the
+41:17
+order so in this case we used an order of 20 right which is very very high and
+41:23
+it gave us an accuracy of 85.5% that also might have led to overfitting what if we are in a huge
+41:30
+high dimension space and that's why we are trying to fit everything exactly let us try to have just two let
+41:38
+us try to just have the power of two here and let us try to see the accuracy
+41:44
+so I'm going to run this logistic regression right now this this code uh
+41:51
+so let me run this part of the code again but now I'm going to play around a bit with the order and I'm going to show
+42:00
+you how the feature order can also have an effect on
+42:06
+overfitting okay so everything else is the same it just I
+42:12
+have reduce the order from 20 to 2 and here you can see immediately I finished
+42:18
+this iteration in 2 seconds earlier it took 90 seconds one more amazing thing I want
+42:24
+you to see is that the accuracy did not change at all which means there was no reason why we are using a power of 20 it
+42:31
+led to a tremendous increase in computational time a 40 times increase because I was getting a 90 seconds of
+42:37
+run time earlier now I'm getting just 2 second and let us visualize the classifier did you see the difference
+42:45
+now it is not classifying this point as noise or now now it is not classifying this point now it is exactly same as the
+42:52
+regularization case it is classif it has recognized that this point is noise so
+42:58
+it should not be included in the classifier it is probably noise so it is fine to not fit this
+43:05
+point this shows that increasing the order of the features also leads to overfitting now we reduce the order
+43:12
+correct we reduce the order from 20 to 2 and we have reduced the problem of overfitting now the decision boundary
+43:19
+does not unnecessarily try to fit this point this is very similar to the decision boundary which we got here plus
+43:26
+we also have higher accuracy over here this gives an this gives a very
+43:32
+important lesson to all of you that when you select the number of features please make sure to select it accurately
+43:39
+because the higher features you choose it may lead to a good fit of the training data but it will lead to
+43:45
+overfitting that is the first lesson the second lesson I want to convey is number of iterations so let's say I only have
+43:52
+200 iterations and I run this so you'll see that the accuracy reduces a lot uh
+43:58
+and the classifier looks like this classifier looks like this although
+44:04
+it does not classify this point which is good but it also does not do a good job of classifying the other point so the
+44:10
+accuracy is reduced that's why generally higher iterations is a good idea to get a good training as well as a testing
+44:19
+accuracy one more thing which I want to show you all is the effect of the Lambda
+44:24
+which is the uh regular ation parameter let's say if I put Lambda to be equal to
+44:30
+now let's say here I am also using a power of two again and let's say I use Lambda is five notice the earlier
+44:37
+accuracy was 71 now let us see the accuracy when Lambda is equal to
+44:42
+5 again this was finished in 2 seconds compared to the 5 minutes it took earlier when I had a power of
+44:49
+20 now with a Lambda of 5 I get an accuracy of 74 which is also a bit less
+44:56
+let me try Lambda
+45:01
+50 with a Lambda of 50 you see we drastically reduce the accuracy can you try to predict why increasing Lambda
+45:08
+reduces the accuracy okay so look at this the more
+45:13
+we increase the Lambda the more this algorithm will give importance to minimizing this aspect of the loss
+45:21
+function so the more we increase the Lambda the algorithm will give a preference to minimizing this a
+45:28
+lot uh compared to this part so even if the loss function is
+45:33
+higher uh it will probably lead to a lower overall loss so it's a summation
+45:41
+of two terms right it's a summation of the loss function plus the regularization so if I so let's say this
+45:47
+the case one where Lambda is equal to 1 whereas this is the case two where
+45:53
+Lambda is equal to 50 okay so if we have a Lambda equal to 50
+46:00
+as is shown over here um our algorithm will give a lot more priority for
+46:05
+minimizing this term rather than minimizing the loss so that will compromise our training loss
+46:13
+uh and that will that has the potential to make the training loss much higher um and that's the reason why we
+46:21
+should not have too high of a Lambda also there should be a balance between a low Lambda to prevent event overfitting
+46:28
+and the high Lambda is not very good very high Lambda is not very good because it leads to a very low training
+46:33
+loss very high training loss as we saw here increasing the Lambda to 50 really
+46:41
+reduced our accuracy whereas if you reduce that same Lambda
+46:47
+to 1 from 50 you will see that the accuracy increased by 30% and the result
+46:55
+Remains the Same let me try reducing the loss Lambda
+47:01
+further to 0.1 here so now Lambda is 0.1 and the accuracy OC has increased and
+47:08
+overfitting is also avoided since we don't capture this point which is very good let me try reducing Lambda even
+47:15
+further to 0.01 and here we can see accuracy increases to almost exactly the same as
+47:21
+what we had before for the no regularization case and we still have the same function with no overfitting
+47:28
+this means that the ideal Lambda for this problem probably lies around the range of
+47:34
+0.01 uh so this is the effect of hyperparameters when you are considering
+47:40
+real life situations like this so in this particular example we saw three
+47:45
+things first we saw regularization versus no regularization in particular if you have
+47:51
+regular if you don't have regularization or model overfits by capturing noise something like like this whereas if we
+47:58
+do have regularization our model neglects these points so although training accuracy is low it's fine but
+48:06
+it neglects these points so that generalization and forecasting can be better second thing which we saw is
+48:12
+regarding hyper parameters and I just want to make a special note regarding the same whenever you encounter any machine
+48:19
+learning problems you are likely to face these hyper parameters number of
+48:25
+iterations uh learning
+48:32
+rate feature dimensions and the Lambda which is the
+48:38
+regularization term it is very important for you to carefully select these four
+48:44
+parameters as we saw if you look at feature Dimension if you have higher feature Dimensions if you have higher
+48:51
+feature Dimensions it can lead to overfitting learning rate if it's very
+48:56
+low it can lead to low train accuracy sorry this for number of
+49:02
+iterations if the number of iterations is very low it can lead to low training
+49:08
+accuracy and Lambda if it's very high it can lead to low training
+49:15
+accuracy and if it's very very low that is also not good because then again it will lead to
+49:23
+overfitting so we really need a good balance for all these par parameters similarly for the learning rate if it's
+49:29
+very low then it will be slow if it's very very high then we'll get low
+49:37
+accuracy so as a machine learning engineer one of the key skills which you will need to develop is how to select
+49:44
+the correct value of these hyper parameters for the different problems which you are looking at and I have seen
+49:50
+that best ml Engineers really uh have developed an intuition of the best Val
+49:56
+VI of these parameters but you have to have a fundamental fundamental understanding of the effect of these
+50:02
+hyperparameters on overfitting the effect of these hyperparameters on training accuracy training loss Etc and
+50:09
+I hope I have conveyed this to you in today's lecture so that brings us to the end of today's lecture thank you so much
+Conclusion
+50:16
+everyone for attending this and up till now we have done an extensive work on classification overall we have done
+50:22
+about 7 to eight lectures on classification and now I think we ready to move towards regression so we are
+50:29
+following the MIT scor now um we are also following a Microsoft scor parall
+50:35
+but it does not have too many good fundamental things so we have finished up to up till week four of the MIT
+50:41
+course and now we'll be moving to week five which is regression so thanks everyone for
+50:47
+staying with me throughout this course I plan to make it as intuitive visual for
+50:52
+you as possible and not just writing equations which you don't understand my focus is on on explaining everything
+50:57
+from scratch so that you don't forget ML and if you are asked questions in an interview like how to select feature
+51:04
+Dimensions you should be able to answer those thank you everyone and I'll see you in the next lecture
