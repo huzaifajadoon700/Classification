@@ -1,0 +1,839 @@
+Introduction
+0:00
+hello my name is Dr Raj dander and today we are going to learn about rid
+0:09
+regression in the previous lecture we looked at uh ordinary Le squares method
+0:16
+but we did not add regularization term to it today we are going to see uh what
+0:23
+does it mean to add a regularization term to the ordinary Le Square solution
+0:29
+and more important how does it solve two main problems which are
+0:34
+encountered in regression without regularization towards the end we will
+0:40
+also see why is it called as rid regression this is rarely explained in
+0:45
+many courses but in fact there is a very nice and beautiful visualization to this name and there is a very strong reason
+0:52
+as to why this name exists in the first place so we'll also take a look at that towards the
+0:58
+end so let's get started started first of all uh I would like to have a small
+1:03
+recap of the Theta optimal or the Theta star which we obtained in regression
+1:09
+without regularization and uh it was given by this particular
+1:15
+formula if you have not seen the regression the OS lecture which was done
+1:20
+in the previous class I would highly encourage you to go through that um because then understanding this
+1:26
+particular lecture will be so much more easier so here here as I noted before we
+1:31
+did not do
+1:39
+regularization so I mentioned about solving these two problems right the first problem uh is going to be what
+1:49
+if the inverse
+1:57
+of w transpose w does not exist what will we do in this case this
+2:05
+formula is completely based on taking this inverse right but what if the
+2:11
+inverse does not exist in the first place how do we proceed then that's the first major problem and uh the second
+2:19
+major problem is of course uh
+2:25
+overfitting and both of these problems will be solved if we use regular ization especially reg regression so essentially
+2:33
+we are kind of killing two birds with the same Stone um it's a beautiful solution to both of these problems so uh
+Ridge Regression formula
+2:40
+let's start looking at rid regression in the first place it's actually very similar to regression which we uh
+2:47
+regularization which we saw in classification
+2:53
+so rid regression simply looks like this so the
+2:59
+object itive function I'm going to call as J Ridge it will again depend on Theta and
+3:07
+Theta not so you can think of this as the slope and you can think of this as the
+3:17
+offset and uh the objective term will be equal to the average
+3:24
+of this is I the average of the squared loss function
+3:38
+and I'm now going to add one more term
+3:43
+here in fact this is the regularization
+3:50
+term this is the regularization term it's exactly similar to the term which
+3:56
+we added for classification if you recall where Lambda is a hyperparameter and
+4:03
+it's a constant and in Vector form this is
+4:10
+magnitude of theta whole Square which can also be written in Vector form as Theta transpose into
+4:17
+Theta uh now one small distinction which I would like to point out here is that when we add the regularization term we
+4:24
+are not including the offset here in particular what this means is that as we
+4:30
+also saw in classification this regularization term adding it means that we want to keep the magnitude of theta
+4:38
+smaller uh so in particular we are penalizing the slope if it's too large
+4:43
+so Theta is the slope and remember Theta not is the offset so let's say if these are my data
+4:55
+points and I want to find the regression line among these data points let's
+5:01
+say uh this is the first version of the line now if I take a line with a higher
+5:07
+slope let's say which looks something like this R regression will penalize this so this will be
+5:13
+penalized and by penalized I mean that if the slope is higher this quantity
+5:18
+will also be higher which means the loss function or the objective function will be higher so which we don't want we want
+5:25
+this J or the objective function to be as low as possible which implies that we want the Theta or the slope to be as
+5:31
+close to horizontal as possible and there is a reason why we do
+5:36
+that we saw that reason in the classification case also the reason why we want the slope or the parameters to
+5:43
+be small in magnitude is that we don't want our final answer to capture the
+5:50
+noise if there is noise in the data we don't want to capture that and having
+5:55
+smaller parameters or having smaller slope ensures that the noise is not captured a general rule to remember is
+6:04
+that if the parameter values are too high it means that our hypothesis has
+6:10
+started to behave like crazy and it is starting to capture noise so we should be careful in such a scenario rid
+6:16
+regression or regularization allows us or prevents Theta from becoming too high
+6:21
+in magnitude and keeps the slope low the second thing what we are saying
+6:27
+is that let's say if this was the original line right this this line this
+6:33
+was the original line and I told you that if it's rotated we will penalize it but essentially what we are saying is
+6:38
+that if I add an offset to this line which means that if I keep the slope of this line same but I change the Theta
+6:45
+not so let's say consider the blue line which I'm calling o and consider L1 and
+6:50
+L2 so o line o line L1 and line L2 have the same same slope so have the same
+6:57
+Theta but they have different Theta not we are not going to penalize that it's
+7:02
+totally fine for us how much our offset is there we don't want to penalize the offset in reg
+7:09
+regression what is only penalized is the slope the offset actually does not
+7:14
+matter too much because whether we increase or decrease the offset it does not mean we are capturing the noise or
+7:20
+not capturing the noise what is more important is to penalize the slope so
+7:26
+one small distinction which I would like to note here and this may be asked in interviews because it's a minor point
+7:32
+that in the ridge regression we penalize the
+7:40
+slope and not the offset if we are penalizing the offset
+7:46
+then there would have been one more term here Lambda into Theta square or something like that but we don't add
+7:51
+that because it's fine to have the offset we are just going to penalize an increase in slope in the lecture on classification
+7:58
+we saw the physical meaning or the intuition behind this regularization term it really helps us to keep
+8:05
+the magnitude of theta small and today we are going to see a Hands-On example
+8:10
+of how this works in practice and how it prevents overfitting how it prevents us from capturing the noise in the training
+8:17
+data also before coming to that I just want to uh write the mathematical version of
+8:25
+this uh so we looked at last time minim
+8:31
+in minimizing J of theta without the r regression gave us
+8:37
+this particular formula for gradient of J gradient of J was 2 by n w transpose W
+8:46
+Theta minus t now if you take the gradient of this just one more term would be added you
+8:53
+already must have guessed that and if you take so it would be an added derivative so if you take the derivative
+8:59
+of of this it will be 2 Lambda Theta so gradient of J
+9:04
+Ridge which is the ridge regression objective function is the first term is
+9:11
+actually exactly similar because it does not change this squared
+9:16
+loss W Theta minus t but we add another term which is 2 Lambda Theta remember
+9:23
+that the dimensions of everything here are D by1 and D by1
+9:30
+so for the sake of Simplicity here I'm not considering Theta not because optimizing J Ridge with Theta turns out
+9:36
+to be difficult and I want to present to you with a simple formula here so I'm just looking at Theta right now for the
+9:43
+sake of Simplicity we also saw that uh Theta
+9:49
+star in the normal case without rid regression is W transpose W inverse W
+9:56
+transpose T it turns out that to find Theta R star which is the optimal Theta
+10:03
+in the r regression you just need to set this quantity to zero uh because we are going to set the gradient to zero so it
+10:11
+turns out that Theta star actually has this uh representation in in case of Ridge regression so so I'm calling this
+10:18
+as Theta star rid and this looks like w transpose W plus n Lambda I inverse W
+10:27
+transpose t
+10:40
+so what this actually means is that if my w transpose W is a square Matrix and
+10:46
+it looks something like this 1 2 2 4 adding Lambda * I means just adding plus
+10:52
+Lambda * adding or strengthening the diagonal terms so then this will be 1 + Lambda 2
+11:01
+2 and 4 +
+11:11
+Lambda so the dimensions of this Vector are same as W transpose W the dimensions
+11:16
+of this are same as W transpose W but we are adding a Lambda term to the uh
+11:23
+diagonals now what many people think is that this is called as Ridge because we
+11:29
+are strengthening the diagonal terms and in a way it's good to think like that but there is a much better visual
+11:35
+explanation to why it is called as rid R regression formula in the first place
+11:40
+even in the MIT course it said that if you add Lambda to the diagonal term it's called that's why it's called as rid
+11:47
+regression and in the MIT course they do not explain the visual meaning for why it is called as rid regression in the
+11:53
+first place uh we'll be coming towards that to the end of this lecture so please watch
+11:58
+till the end end uh so as I mentioned this formula is
+Preventing overfitting
+12:04
+going to solve two things for us this formula is going to solve two things for us one is that it's going to
+12:13
+reduce overfitting or
+12:18
+rather it will prevent us from capturing noise in the
+12:27
+data and the second is that it's going to take care of the invertible problem
+12:34
+so what if W transpose W is not invertible in
+12:39
+the first place we will see how addition of this
+12:45
+Lambda I takes care of the non-invertible problem so first let's look at how rid regression helps us to
+12:52
+prevent overfitting or helps us to prevent us from capturing noise
+12:59
+let's look at this and for the purposes of demonstration uh I'm going to take
+13:04
+this example where we have so this is our data set let's say I have these
+13:10
+lines and then I have three outliers this is my data set okay uh when I
+13:16
+prescribe the data set I know that these three points are just
+13:23
+noise what we are going to do in Python now is that we are going to run two cases first is we are going to run uh
+13:33
+the OLS without
+13:39
+Ridge and second secondly we are going to run OLS with Ridge now before we move
+13:46
+to the python demo I want all of you to think what will be the solution in both of these
+13:52
+cases what do you expect the difference to be remember that in the OS with Ridge
+13:57
+we are going to add the Lambda into modulus of theta whole square and we are going to minimize this
+14:04
+entire uh objective function whereas without the ridge only the squared loss
+14:09
+will be minimized I hope all of you have first of all thought about an answer in your
+14:15
+own mind now let us move to python code um I'm going to go through the code
+14:21
+step by step so if you don't understand no worry I'll be sharing the code file with all of you towards the end and it's
+14:27
+pretty simple okay so uh we are going to do the r
+Python code - prevent overfitting
+14:35
+regression example now uh and let me show you how I have constructed this problem in Python first I have imported
+14:42
+the packages which is numai and matte plot lib this is pretty standard now numai is for scientific Computing Matt
+14:49
+plot lib is for plotting now then what I do is uh I
+14:55
+Define the number of uh so I'm creating the data set now so uh
+15:02
+what I do is that uh I Define the X input and then I Define the Y input so
+15:10
+you will see that 10 points here are along a straight line which is divide which is 2 into X input plus a very
+15:17
+small amount of random noise so basically uh don't look at the straight lines right now just look at these Blue
+15:23
+Points so 30 points are there here that's why I have said n equal to 30 and
+15:28
+what I've done here is that Y is equal to 2x plus small amount of noise so what I'm doing here is that initial 30
+15:40
+points so I'm I'm doing y = 2x y = 2x
+15:46
+and I'm doing and I'm taking 30 points here and I'm adding very very small amount of noise to all of these points
+15:53
+so they will lie somewhere along these this line so this is how the first 30 points actually look like
+15:59
+if you just look at the blue dots right now the first 30 points look like this they lie away and Beyond from the yal to
+16:06
+2x line and then what I will do is I will add three outliers so here you can
+16:12
+see I've added three outliers so X inputs are 15 18 and 20 and their y inputs are 80 90 and 100 this is where
+16:20
+the three outliers are see 1 2 and three so the blue dots are my input
+16:26
+data clearly when you plot this you will see that that this is noise right this
+16:31
+does not most of the input data is focused around y = to 2x line but these
+16:37
+three are the noise points they are the outlier points okay so uh now as is done with the rid
+16:45
+regression so first let me compute the OLS solution and look I ultimately want
+16:51
+to use the formula this formula for the OS W
+16:57
+transpose W inverse w transpose T this is the formula which I want to use and
+17:04
+in Python it's actually written the the same way if you see this inverse of X transpose X which means w transpose W
+17:11
+inverse multiplied by W transpose T multiplied
+17:17
+y this is the same thing W transpose W inverse W transpose T multiplied by T so
+17:23
+in the code uh in the code W is just replaced by X and and T is just replaced
+17:30
+by y so in the code the formula for Theta star is X transpose X inverse X
+17:37
+transpose y it's as simple as that uh now first thing which I want you
+17:46
+to U remember is that uh you remember the X augmentation
+17:51
+which we did uh the X augmentation was uh adding
+17:58
+the column of ones so if you had the X1
+18:03
+X2 or X1 y1 let me put X1 X2 as the first data
+18:09
+point if the second data point was uh X3 X4 something like that then
+18:16
+the way this is the augmented Matrix is constructed is that we first add a column of ones then we write the first
+18:23
+data point then we write the second data point this is what this is how W is constructed in in this formula so
+18:30
+remember that W is the augmented Matrix in this formula and we have to append a column of ones we have covered this in
+18:38
+detail in the previous lecture so please have a look at it in detail so here you can see what I'm doing is we are adding
+18:44
+a column of ones here to the X input uh so if I uh if I show how the X
+18:53
+looks like here let me just type X and show you so you see this
+18:58
+this is how the X looks like we have added one one here and uh let me show you how y looks like so
+19:06
+this is how the Y Matrix looks like uh okay great now let us Implement
+19:14
+so I'm going to delete these two right now okay so the first thing is to find
+19:21
+the OS solution which is just X transpose X inverse X transpose Y and we have calculated it the second thing is
+19:28
+finding the reg regression uh uh formula and if you see the formula
+19:35
+it's like X transpose X Plus n * Lambda I inverse X transpose T so now what you
+19:42
+will see in this code is
+19:48
+that okay now what you'll see in this code is that if you see the beta Ridge
+19:54
+it is uh X transpose X Plus Lambda into I see that is what uh we have also
+20:01
+written here plus Lambda into I and then we take an inverse uh and then we take an inverse
+20:07
+here so remember that n n Lambda is the constant and what we have done here is
+20:13
+that uh the Lambda rid is actually n into Lambda in the code so we are
+20:20
+choosing it as thousand right now when I share the code with you you can feel free to vary the Lambda and see the
+20:26
+results for yourself so this is the form for for beta that's it I just have two
+20:31
+formulas in this code I have uh so let me write these formulas here for your
+20:36
+reference so the first Formula is X transpose X inverse X transpose Y and the second
+20:45
+formula is X transpose X Plus Lambda Ridge I and uh X transpose y inverse so
+20:55
+Lambda R is just n Lambda in our previous notation here so I'm just doing this and I'm
+21:01
+written this formula for these two in Python right now that's it actually now
+21:07
+what I'm just going to do is I'm going to find the optimal Theta star so this
+21:12
+is Theta star and this is Theta star Ridge and I'm going to compare it with
+21:20
+the actual data are you ready for the comparison check let us see the
+21:25
+comparison before that please have an intuition of what you think the true answer might
+21:30
+be so this is the so the blue is the true data which
+21:35
+you have already seen with these outlier points and when I say OLS fit fit OLS
+21:41
+fit means the optimal solution the Theta star which is returned by the formula
+21:47
+and that is given by the red line and if you look at the green line that is the
+21:52
+fit which is given by the ridge regression with a Lambda equal 2,000 first of all I want you to notice
+21:58
+that there is a big difference between the red line and the green line the red line seems to deviate towards this noisy
+22:05
+data also it seems want to capture all the data so it's triy so it's tried its
+22:10
+best to kind of increase its slope to capture the noise now remember what I said about
+22:16
+Ridge regression what Ridge regression actually does is it penalizes the slope so it prevents the slope from becoming
+22:23
+too high that's exactly what happened here so since the slope cannot become too high the r regression line which is
+22:30
+the green line remains with a lower slope so it neglects this noise and it
+22:36
+captures only the correct data uh this is the handson Practical
+22:44
+visualization of how rid regression works and why it works now did you understand why we added this Lambda into
+22:52
+modulus of theta whole Square so let us see the slope in both of the cases and
+22:57
+let us see uh Which is higher so I have plotted the so beta OLS will give me the slope of
+23:04
+the OS which is 4.58 9 and beta Ridge is the slope of the green line which is the
+23:10
+slope of the ridge regression and this is almost half of the slope of the beta ois because since we added this Lambda
+23:18
+times this term in the reg regression we prevent the slope from becoming too high
+23:24
+and hence we do not capture the noise in the data and I want you to note how this prevents
+23:30
+overfitting as well now let's say I give you some test data let me show it to you here uh here right so this is our
+23:38
+training data let's say I give you test data it is very likely to lie somewhere
+23:43
+here because that's where most of the data lies correct now my two hypothesis
+23:50
+my first hypothesis is this which is without
+23:56
+Ridge and it would do do very badly on the test data because it has captured noise so it slope has become very high
+24:04
+but now if you see this which is my with with the r
+24:09
+regression it will actually do much better on the testing data as
+24:14
+well so the first thing which we saw and we have seen this in practice through
+24:20
+our python code right now is that Reg
+24:25
+regression reduces
+24:31
+overfitting it prevents us from capturing the
+24:41
+noise and in general it does
+24:47
+better on the test data so this is the first benefit of reg
+Non invertible matrix
+24:55
+regression now let us look at the second benefit of R regression which is what if W transpose W is not invertible in the
+25:03
+first
+25:16
+place okay now for this I'm going to take a two dimensional data set so we
+25:23
+are not going to be in one dimensional anymore we are going to be in two dimensions and and uh my inputs X1 X2
+25:31
+will look something like this so let me first also show you the code uh so this
+25:36
+is the reg regression non- invertible so I'm going to have four
+25:43
+data points uh I'm going to have 1A 2 2A
+25:49
+4 3A 6 and uh 4A 8 these are my data points okay
+25:59
+these are my data points so the W Matrix will look something like this 1 1 2 1 2
+26:07
+4 1 3 6 1 48 okay and
+26:14
+uh the Y values are going to be 5 9 13 and
+26:23
+17 y values are 5 9 13 and 17
+26:29
+so the way the hypothesis class will look in this case is beta 1 into X1 plus
+26:36
+beta 2 into X2 so the visualization will be in a
+26:42
+three-dimensional plane uh because the Y values are so you
+26:47
+can consider that for this x of 1A 2 the Y Valu is five so it will lie somewhere
+26:53
+in a three-dimensional plane for 2A 4 it's 9 for 3A 6 is 13 for 4 comma 8 is
+26:59
+17 so you can visualize it in three dimensions and uh the H so
+27:05
+this uh this line which is our best fit line will be a hyper plane this
+27:13
+time it will not be a straight line because it will be fitting in three
+27:18
+dimensions first thing which I want you to noce that this problem of w transpose W not being invertible it really arises
+27:26
+if our features are dependent features are dependent now what does it
+27:36
+mean as we saw in the case of classification the features are things which we measure like ear flappiness
+27:42
+index or or whisker length Etc so in this case the features are X1 and
+27:47
+X2 and we clearly see that the features are depending on each other right there is a clear relation between these
+27:53
+features X2 is equal to 2x1 there is a clear at relation between the
+28:00
+features okay so here we can see as I mentioned that the features are clearly dependent on each
+28:06
+other uh and as I mentioned this may happen in real life because when we
+28:12
+measure different features it's very likely that many of them depend on each other let us try to now actually
+28:18
+calculate the W transpose W inverse in this case for this particular case just
+28:24
+for the sake of Simplicity I'm going to neglect Theta not so I'm not going to use the augmented Matrix because then it
+28:30
+will lead to a 3X3 Matrix calculation for the sake of Simplicity here I'm just going to use x transpose X inverse X
+28:38
+transpose y but you can clearly do it for the case of uh W
+28:44
+also okay so my X is 1 2 2 4 3 6 4
+28:52
+8 so let us calculate X transpose x x transpose X will be what 1 2 3 4 2 4 6 8
+29:02
+multiplied by 1 2 2 4 3 6 4 8 so then I
+29:09
+will have two rows and two columns since this is two rows and four
+29:15
+columns this is four rows and two columns so for the first row and First Column I'll multiply all and add so it
+29:21
+will be 1 + 4 + 9 + 16 which will be
+29:30
+30 for the first row and second column it will be two it will be 2 + 8 + 18 +
+29:42
+32 which will be 50 + 8 58 + 2
+29:48
+60 for the second row First Column it will be 2 + 8 + 18 + 32 which will again
+29:55
+be 60 and uh for the fourth row it will be sorry for the second row second column
+30:02
+it will be 4 + 16 + 36 + 64 so this will
+30:08
+be 120 so this is my X transpose X now if
+30:14
+you remember uh if I had a matrix a b c d to calculate the inverse it was 1 Upon
+30:23
+A / BC into some other Matrix correct now let us see what ad minus BC is in
+30:29
+this case so this is my X transpose X ad minus BC is 36 0 - 36 0 which is
+30:38
+equal to 0 that's why this Matrix is called not invertible because we have to take a division by zero in this formula
+30:46
+now what do we do here let's say you have a data like this uh and you want to use this
+30:52
+formula but it turns out that when you're calculating this formula there comes a zero in the denominator and the
+30:58
+inverse does not exist at all now let us look at Ridge regression
+31:03
+so the rid regression what it will do it will do X transpose X inverse X
+31:09
+transpose Y correct so no sorry the r regression will add X
+31:15
+transpose X Plus Lambda I and then it will do inverse X transpose y so if you
+31:22
+see X transpose X is still 30 60 60
+31:30
+120 but plus I will now add a Lambda into I so it will be Lambda Lambda 0
+31:39
+0 so then this Matrix will now be 30 +
+31:47
+Lambda 60 60 and 120 +
+31:52
+Lambda now let us calculate this ad minus BC which is the determinant as as
+31:58
+a rule if ad minus BC is z which means if the determinant is zero The Matrix is non-
+32:03
+invertible so if you do ad minus BC
+32:08
+here so this will be 150 Lambda + Lambda Square it will be
+32:15
+greater than zero which means it's clearly not equal to zero so if our
+32:21
+features are dependent then the normal OS formula does not work normal OLS
+32:27
+Formula does not work but what does work is the r regression
+32:33
+formula this formula works because it adds a diagonal term it adds a diagonal term here it
+32:40
+adds this Lambda term here and thus what it effectively does is that it
+32:47
+prevents the determinant which is a minus
+32:54
+BC of X transpose X or w transpose W
+32:59
+when we consider Theta not and when we do that augumentation it prevents the determinant to be zero and hence it
+33:05
+makes the Matrix invertible in the first place this is the second problem which
+33:11
+is actually solved by uh reg regression and I have written a very simple code to
+Python code - non invertible matrix
+33:17
+demonstrate this let me uh run this code
+33:26
+again so what this code essentially shows is that uh there are four points
+33:32
+which I have which we already considered one comma 2 2A 4 3A 6 and 4A 8 and their
+33:39
+y values are 5 9 13 and 17 so if you are to plot these four points in a 3D space
+33:45
+they will look like this so this is X1 comma X2 and on the Y which is the Z
+33:50
+axis right now we have the Y values so these are the four dots the four circular dots shown by the four red
+33:56
+points as we see uh we cannot use normal regression here so we are just going to
+34:03
+use Ridge regression and we use the same formula X transpose X+ Lambda I inverse
+34:10
+multiplied by X transpose y that's it and then I'm going to just plot it so
+34:15
+the optimal plane looks something like this and I've just plotted it along the
+34:21
+data points and here you can see that all the Four Points lie on the data which means we are able to capture the
+34:27
+data it pretty well using the regression formula if you want to check out the uh
+34:33
+so the formula in two Dimensions is beta KN plus beta 1 X1 + beta 2 right
+34:44
+plus beta 2 X2 this is the Y and we want to find the
+34:50
+optimal beta beta 1 and beta 2 So This Plane which I have plotted here this
+34:55
+plane is for the optimal beta 0 beta 1 and beta 2 given by R
+35:00
+regression formula now if you want to see the magnitude of this beta 0 beta 1
+35:06
+and beta 2 you can just plot the optimal value you can see the numbers and then you can calculate so if so I now know
+35:16
+that my true hypothesis which is y is equal
+35:22
+to uh
+35:29
+.9 +8 X1 + 1.6
+35:35
+x29 +8 X1 + 1.6 X2 so this is just beta
+35:42
+0 beta 1 and beta
+35:48
+2 so what now we can do is that we can take these four points and we can plot
+35:53
+the Y prediction so this is y prediction we can plot the Y prediction and we can
+36:00
+compare it with the Y actual and Y actual was
+36:06
+uh 5 9 13 and 17 5 9 13 and 17 okay so let's see so
+36:17
+when we calculate why predicted it is 4.93 8.96 12.99 and
+36:23
+17.02 which is very close to 5 9 13 and 17 which means that the ridge regression
+36:30
+has actually given us the correct answer which we also visualized from the plot but this is just a more mathematical way
+36:36
+of checking the prediction with the correct answer so this is the second advantage
+36:43
+of R regression which we saw the First Advantage is that R regression reduces
+36:49
+overfitting and the second Advantage is that it
+36:56
+solves the non invertible problem it solves The non-invertible
+37:03
+Matrix Problem by adding Lambda I to the diagonals as we saw Here by adding
+37:11
+Lambda to the diagonals and making The Matrix itself invertible now what I'm going to do is
+Why is it called “Ridge Regression”
+37:17
+now I'm going to have a final section on why is it called rid
+37:22
+regression I'm sure many of you are curious to know this um and it's not
+37:27
+explained very nicely in other courses so I just want to take some time to explain
+37:35
+this so why is it called rid
+37:43
+regression the reason is got to do with the second problem which it solved the
+37:48
+non-invertible problem uh the reason Lies over there so
+37:55
+let's say we have the same case uh we have the same case where we have
+38:01
+uh X1 and
+38:06
+X2 1A 2 2A 4 and 3 comma 6 let's say
+38:12
+these are my inputs and I have some outputs for each point let's say the
+38:18
+outputs are 3 5 and 8 this is the Y so my X
+38:26
+is what 1 2 2 4 3 6 and my Y is
+38:34
+358 now you see here the features are dependent on each other which are also called correlated
+38:40
+features the features are
+38:50
+correlated so X2 is = to 2 X1 in this
+38:56
+case now now let us investigate what is meant by non-invertible matrix right and
+39:02
+how does it really show up so the Theta which is our hypothesis will look
+39:07
+something like this Y is equal to beta 1 X1 + beta 2 X2 correct and X2 is equal
+39:15
+to 2 X1 so y will be beta 1 + 2 Beta 2 into
+39:24
+X2 now it turns out that let's say now you have take the loss loss is equal to
+39:31
+Sigma I goes from 1 to 3 or how many points we have y
+39:39
+minus y i - beta + 2 Beta 2 X2
+39:45
+I whole Square this is what the loss function will look like without the r regression and we can actually plot a
+39:54
+threedimensional plot between beta 1 beta 2 and the
+39:59
+loss let us see what that plot actually looks like so I have a code here called Ridge
+40:06
+visualization look at this plot of the OS lost surface so this is called as lost surface and this is a plot of beta
+40:14
+1 beta 2 and the loss ideally we want to find the beta 1 and beta 2 which lead to lowest possible loss right so there
+40:20
+should be a local Minima but if you zoom in closer here this is not a Minima but
+40:25
+this looks like a ridge the reason it looks like a rid is that
+40:31
+there are a huge number of values for which the value of the loss is exactly the
+40:36
+same so if you visualize this from the bottom or if you visualize like this
+40:43
+there is a flat surface here it's not like a local Minima like not one point
+40:48
+where it's minimum it's minimum at a lot of number of points so there are a huge number of points at which the loss
+40:55
+function is minimum and that is a big problem because uh which means that there can be
+41:02
+a huge number of beta 1 and beta 2 which might lead to the correct answer right so observe this loss function carefully
+41:09
+like I also share this plot with you this feature at the bottom it's called as a ridge a ridge is basically a curved
+41:16
+surface and a flat bottom this is what it looks like flat bottom and the curv surface so the flat bottom is where the
+41:24
+loss function is the same because it's horizontal so we have a low lowest loss function
+41:30
+for infinite values of beta 1 and beta 2 um and that is what why it looks like
+41:37
+a ridge and that is a big problem because we won't get a local Minima in fact this Ridge causes many other
+41:43
+problems it means that uh even if you change beta by huge amount the loss will
+41:49
+not change since this this thing is flat in all directions up to
+41:54
+infinity and so sometimes we get solu utions with very high parameter values
+41:59
+because even those will lead to the same amount of loss the reason it's called rid regression is because if we add the
+42:06
+regularization term what the regularization term does is that imagine this is the flat surface this the
+42:13
+regularization term lifts the flat surface it lifts it and makes it curved
+42:18
+so this is the OLS lost surface and this is the Lost surface for Ridge so if I just add a
+42:26
+ridge ter you can look at the values here look at the bottom values all of them are stagnating around
+42:33
+50k but now if you see the ridge lost surface the ridge has taken the bottom
+42:39
+and put it up top so then all the values are higher than 50k so there is no
+42:45
+stagnation line at the bottom there is no stagnation flat surface here you can
+42:51
+see the ridge has kind of elevated the bottom see this this is the bottom which is elevated but if you see this there is
+42:58
+a flat flat line at the bottom that is a big problem for us because there are infinite values of beta 1 and beta 2
+43:04
+which lead to the correct answer the reason it's called Ridge regression is that Ridge helps us get out of adding
+43:11
+the ridge loss or the regularization term helps us get out of this Ridge and
+43:17
+uh helps us attain a local Minima again that's why it's called as a ridge
+43:22
+regression so this is the visual explanation for what happens when when our features are correlated when our
+43:28
+input features are correlated the loss function uh looks something like this
+43:34
+there's a ridge at the bottom and there are infinite values of beta 1 and beta 2 which can lead to the correct answer
+43:39
+this means that our potential Optimum can have very high values which is not good for us what the regularization term
+43:47
+does is that it lifts The Ridge and it prevents us from getting these infinite set of correct
+43:53
+Solutions that's the reason why it's called as rid regression uh I'll share all of these three code files with you
+43:59
+the rid visualization OS rid regression where we saw how it prevents us from capturing
+44:06
+the noise and I will also show I share this this code where I showed the input
+44:13
+features as dependent on each other and how the rid regression helps us to find
+44:18
+the correct hypothesis in this case Okay so this brings us to the end
+44:24
+of this lecture we actually saw three things in this lecture the first thing was uh how rid
+44:30
+regression helps us to solve two main problems uh the first problem of
+44:38
+overfitting and the second problem of uh basically
+44:44
+inverse of w transpose W does not exist does not exist or this can also be
+44:51
+written as a features if if features are correlated
+44:59
+and overall we saw one very crucial thing we saw why it is called as R
+45:04
+regression we visualized we visualized R regression
+45:10
+and we saw that if features are correlated we get stuck in a
+45:17
+ridge we get stuck in a ridge which looks like so if you plot the loss function as a function of the beta 1 and
+45:24
+beta 2 it looks like there are infinite values of beta 1 and beta 2 which lead to the lowest answer because this Ridge
+45:31
+is a straight line at the bottom what the ridge regression does is that or
+45:37
+adding a regularization is it lifts the ridge up so that we don't get infinite values of beta 1 and beta 2 we don't get
+45:44
+very high values of our parameter Etc uh so this brings us to the end of
+45:50
+this lecture as always I try to keep it as visual as possible while also explaining the fundamental mathematics
+45:57
+so we have now covered rid regression and uh in the subsequent lectures we will
+46:04
+cover many other topics so stay tuned for the next lectures thank you
