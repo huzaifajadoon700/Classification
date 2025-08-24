@@ -1,0 +1,796 @@
+Introduction
+0:00
+[Music]
+0:05
+hello everyone welcome to this video on convolutional neural networks in this
+0:11
+video we'll be building our own CNN model and uh we'll be applying it to a
+0:17
+very Hands-On project we'll be building our own brain tumor AI model which can
+0:23
+classify MRI scans into whether a brain tumor is present or whether a brain tumor is absent this is an excellent
+0:30
+project to practically work on convolutional neural networks this will be a Hands-On implementation I would not
+0:37
+go into the theory too much in this lecture if you want to understand the basics uh and the theory at different
+0:44
+portions I will encourage you to go and check out our YouTube channel in which we have convolutional neural network
+0:51
+Theory videos as well and the conceptual videos so let's get started with today's
+0:57
+lecture my name is Dr Raj deer and I graduated with a PhD from MIT in machine
+1:05
+learning now our goal through this channel is to make Ai and ml accessible to
+Project overview and objectives
+1:11
+everyone so let's get started with today's project as I mentioned today we will be building our brain tumor AI
+1:18
+model which can look at MRI scans and classify whether a tumor is present or
+1:23
+whether it is not present so uh first let's look at the
+1:31
+overview of the project let's look at the objectives and let's look at the data set which we have so here is the
+Dataset description
+1:38
+link for the data set I'll also put the link in the description of the video when I click on this link I'll be taken
+1:43
+to this kaggle page to those of you who don't know about kaggle it's a website where people do machine learning
+1:49
+projects there are machine learning competions and there are some amazing data sets which are hosted on kagle for
+1:56
+example this is a brain tumor data set which is hosted on kagle and and uh here
+2:02
+you can see that uh this data set has uh two tags if you see over here yes
+2:08
+it has no and yes which means that if you click on the no these will be images
+2:14
+where brain tumor is not present these are MRI images from actual patients and
+2:21
+these are images where brain tumor is not present so and if I click on yes you
+2:27
+will see that here are the images where brain tumor are present so we have a large number of jpj files for brain
+2:34
+tumor not present and we have a large number of jpj files for brain tumor which is
+2:39
+present further investigation about the data set reveals that it's a black and white data set and uh people have
+2:46
+commented very nice things about this data set it's also B starred it's supported by 1261 people this is an
+2:53
+indication that this is a reliable data set and we can use this for our purposes of implementing the project
+3:00
+so this is the data set description you can form a visual map of okay brain tumor yes no in yes I have some images
+3:07
+and know I have some images the main goal is that if any new image is given to you whether your CNN model will be
+3:15
+able to correctly predict if a brain tumor is present or not okay so one more uh thing which uh I
+3:23
+would like to mention here is that at the end of this project actually we'll be developing a dashboard and host in it
+3:30
+so that you can also share it with your friends and your colleagues and you can also add it to your
+3:35
+resume okay so I hope you understood the data set description part and now
+3:40
+whenever you're working on a real life problem like this it always makes sense to think a bit more about what am I
+3:47
+trying to solve here do I know more about this project etc for example if
+3:52
+you don't know what a brain tumor is a brain tumor occurs when abnormal cells form within the brain there are two main
+3:59
+types malignant tumor and benign tumor uh benign tumor means it's not risky and
+4:05
+malignant tumor means that it's risky uh so this is the brain tumor and
+4:11
+that's why doctors take MRI scans the reason we are doing this project in the first place is because imagine there are
+4:17
+a huge number of MRI scans and it's quite difficult for the doctors to just look at the image and say whether a
+4:24
+brain tumor is present or absent for such a large number doctors can of course do an amazing job for a limited
+4:30
+amount of image data set but as the patients increase then it becomes much more difficult this was seen during
+4:36
+covid times as well for example uh during covid times the chest x-rays were
+4:41
+taken and there were so many patients that sometimes it was very difficult for doctors to manually scan or detect
+4:49
+whether there is some abnormality or not in such cases AI is your friend and AI
+4:54
+is helpful because it can do the classification in a very short and quick period of time
+Loading packages
+5:02
+okay now once we have understood the data set once we have understood the project and the objectives of the
+5:07
+project now we can move towards the uh setting up the environment which is Step number two so in this part we'll be
+5:16
+loading and importing some packages and uh I would just like to tell you about
+5:21
+two major machine learning packages which will be using and uh why they are
+5:26
+important the first is caras and the second is kitler so kasas is basically an API
+5:33
+which is which gives many functions in its Library it makes it very easy to build
+5:40
+machine learning models to train machine learning models using kasas kasas is integrated with tensor flow which makes
+5:47
+it brilliant to run it in Python so what kasas does is that it can help us Define
+5:54
+convolutional neural networks it gives functions such as model.fit model. comp
+6:00
+Etc and within five to six lines of code we can fit the convolutional neural
+6:05
+network model we can compile the model Etc it just makes life very easy for us we don't have to code too many things
+6:11
+from scratch then you might be wondering okay if we are using caras for machine learning what's the use of Sait learn
+6:18
+Sait learn is actually very useful for some things like if you have a data and if you want to split it into training
+6:24
+and testing uh using one one line of code you can do it using it learn packages
+6:31
+secondly if you want one hot encoding to be implemented on your labels you can do it very easily using ssit learn packages
+6:38
+so that's why we are going to be using syit learn of course there are some common packages such as numai for
+6:44
+scientific Computing and matte plot lip for plotting which will of course be needing so let us import these packages
+6:52
+we'll import kasas and from kasas we'll need the following API or the following
+6:57
+function calls the first is sequen this is for creating the CNN
+7:03
+architecture itself we'll we'll look at this in detail when we come to this
+7:09
+part the next is we need kasas do layers so that we can create different layers
+7:14
+such as the convolution filtering layer Max pooling layer the flattening layer
+7:20
+the dense layer Dropout and badge normalization remember Dropout and batch
+7:25
+normalization are very useful for regularization to make sure we are not overit fitting that's why these also
+7:31
+will be needed of course numai is needed pandas is needed because as I'll show you we'll
+7:37
+be dealing with data frames for easy understanding of the data and mat plot
+7:42
+Li is needed because we'll be plotting different things such as the training loss the validation loss Etc as I told
+7:49
+you before s kit learn is useful because it will provide us two functionalities which we are going to need in this
+7:55
+project the first is splitting the data into training and testing and second is
+8:01
+one hot encoding okay so I hope you have understood this part you can run this I
+8:07
+have already pre-run this so I won't be running it again right now um it won't take too much time if you are installing
+8:13
+kasas for the first time it might take some time because it's a bulky Library everything else should be uh loaded
+8:19
+quite quickly the next thing we have to do is importing the data so I'm using a
+Data import and preprocessing
+8:25
+specific sequence here to import data into my Google collab the way I do it is that I go to this kaggle and then I
+8:31
+click on download what this will do is that once I sign in it will download the
+8:36
+entire data set for me and then I go to Google Drive and I upload the data on Google
+8:42
+Drive so uh I put it in the folder which reads my drive uh Slash uh the name of
+8:49
+my data set so I name it as brain tumor data set this is where my data set will be and you can follow along these
+8:56
+steps uh if you want your Google collab to be connect connected with the Google drive because remember we'll be needing
+9:02
+the data which is stored in the Google Drive so you can run this part which is from google. collab import Drive what
+9:10
+this will do is that it will just Mount uh the drive and then Google collab will be able to access uh all the
+9:18
+data from the drive once the data is imported then we'll be doing some of the data
+9:24
+pre-processing so remember the way the data is downloaded is that there are two
+9:29
+labels there is no um and there is yes so what I need is that since all of this
+9:35
+will be in my training data I'll I need to merge these images together and then
+9:41
+I'll of course do the train test split uh but I need to append so let's say there are 500 images for no 500 images
+9:47
+for yes I will append all of these together first and then split them into training data set and the testing data
+9:54
+set so first task is to append these images together so what I'll be doing is is that I'll first uh look at the images
+10:03
+which have yes so the way this data is stored is that brain tumor data set will be the main folder and within that there
+10:10
+will be two subfolders yes and no the yes subfolder will consist of all the
+10:16
+images where brain tumor is present and no will consist of all the images where brain tumor is absent so first I'm going
+10:22
+to look in the yes images and I'm going to look at all the paths of these images
+10:28
+and uh I'm going to to append the paths together and then what I'll be doing is that so I'll be storing the paths in
+10:35
+this array called or List called paths then there's another list called Data in
+10:40
+this data I'll store the images so here I'm storing all the yes
+10:46
+brain tumor is present images in this list called Data so I'll keep on appending this data remember one thing
+10:53
+that uh here I'm also doing one more pre-processing step which is resizing whenever I read an image in the folder I
+10:59
+resize it to 128 128 3 so that all the images are of the same
+11:05
+size uh so this is for the image and remember that we also have labels for each image whether brain tumor is
+11:12
+present or not right so what I'm going to do now is that these labels are zero or one so I'm going to transform it to
+11:18
+one hot encoding so that it helps us during classification so the label zero is transformed into one hot encoding as
+11:25
+1 comma 0 and label one is transformed into one encoding as 0 comma
+11:31
+1 so this is what is happening in this encoder do transform which means that
+11:36
+every single image output label is transformed into 1 comma 0 or 0 comma 1
+11:42
+so basically if it's 1 comma 0 it means the true label is zero which means tumor
+11:48
+is not there and if it's 0 comma 1 it means true label is one which means tumor is
+11:53
+there so this is the pre-processing for the yes uh images for the no images I'll be
+12:00
+doing the same thing for the no images uh remember we already had this data list which consists of the yes images to
+12:08
+that same data list I'll be appending the new images so that I have all of them in one list called data and uh I
+12:15
+have another list called as result which I already declared over here and the result will contain the labels uh of the
+12:23
+data set which are appended together so U if I were to
+12:29
+write it down over here it will look something like this so my
+12:37
+uh my data list consist of all the yes
+12:42
+and no and my result list consist of the labels so I've have appended all of this
+12:50
+together right now so which means that maybe initial few might be the yes and
+12:56
+then I append the no to this and the result is whether yes or whether no so it will be 0 1 1 0 0 1 1 0 Etc because
+13:05
+of the one hot encoding actually since all the first data set will be yes uh it
+13:10
+will be 0 1 0 1 0 1 and then it will be 1 0 1 0 1 0 something like that so
+13:17
+that's why I'm creating this list so that all the data is appended together and then what I'll be doing is that once
+13:23
+I have this appended list right then I'll uh use this much for training let's
+13:28
+say so I'll use I'll use maybe the first 70
+13:34
+or 80% for training and uh I'll use the
+13:39
+remaining uh let me Mark it with a different color I'll use the remaining
+13:44
+20% or 30% for testing so that's why I have aggregated all of it together so
+13:50
+that I can just split it later into 10 and test okay so this is the aggregation the
+13:57
+result. upend I'm appending the no values and then um I'm also converting
+14:03
+the labels into a one hot encoding now uh this data Matrix has all the
+14:08
+different images whether it's a yes or no so let me print the size of the data Matrix and you'll see that it's 139 128
+14:16
+128 3 so it's a four dimensional tensor 128 by 128 is the size of the image and
+14:22
+since it's RGB there are three different channels and uh 139 is basically the
+14:28
+number of images which we are considering right now so the total number of images which we have is
+Train test data splitting
+14:35
+139 um great and then what I'll be doing is that I'm going to be splitting the
+14:41
+data into training and testing this is where I'm going to use the train test split command from syit learn this is
+14:48
+the advantage of using using packages like syit learn you don't have to otherwise you would have to write that
+14:53
+here's my data use this much for training use this much for testing but s learn Pro provide that functionality
+15:00
+automatically for you um you just need to specify the test size so I have
+15:06
+specified it as02 which means that 20% of the data will be used for testing and the remaining 80% will be used for
+15:13
+training once you split the data into training and testing you can actually print so you can print the number of
+15:19
+images in the training data which is 111 thly 80% of the entire data set and if
+15:26
+you print the number of images in the testing dat data there are 28 images
+15:31
+roughly 20% of the entire data set it's very very important to understand the data in
+15:38
+this manner and to spend a lot of time on the data which is part one part two and part
+15:43
+three um and also part four uh yeah part three which is splitting the data many
+15:49
+people what they do is that they just download the data and move to the modeling part but uh that is not a very
+15:57
+wise thing to do because unless you are very clear about the data you will never be able to improve the machine learning
+16:03
+model too much it's very important to have a good feel about the data set the size of the data
+16:09
+Etc so that you can debug the machine learning model in an easy manner after
+Building the CNN model
+16:14
+step three is finished we move to the step number four which is basically to build uh build the AI model and uh
+16:24
+as the AI model which we'll be using here is a convolutional neural Network
+16:30
+so let me actually now take you to this uh whiteboard to actually show you the
+16:35
+different layers which we are going to use in the convolutional neural network typically when you look at any CNN it
+16:41
+looks like this there is an image which is the input and it goes through a series of layers or building blocks
+16:48
+there are four building blocks which I want to pay which I want you to pay attention right now the first is a convolutional layer this is also called
+16:55
+as the filtering layer that is the first building block the second building block is the max
+17:01
+pulling layer uh I'll tell you what each of these means the third building block is
+17:06
+the flattening layer and the fourth building block is the fully connected layer these are the building blocks
+17:13
+which you will generally see in any convolutional neural network architecture uh so let me start
+17:20
+explaining these to you step by step I'll not go into too many details I highly encourage you to watch the videos
+17:27
+which we have for each of these SE separate components so let's look at the first layer which is the filtering layer
+17:33
+or the convolution layer there is a very nice animation which actually explains this so if there is a coffee cup like
+17:40
+this what happens in a filtering layer is that we choose the amount of filters which we need and uh we choose the size
+17:48
+of the filters so let's see what each filter actually does what each filter actually does is it slides through the
+17:55
+image and then it does the convolution operation so here if you see on the screen right now there is a small 3x3
+18:03
+filter which is so I'll play this right now there is a small 3x3 filter um
+18:09
+you'll see on the left hand side of the copy coffee cup the 3X3 filter is moving uh so the 3X3 filter has some values so
+18:17
+it will take the dot product of those values with whatever is present in the image and it will produce an output
+18:23
+image which is seen over here on the right so on the left hand side is the input image the filter goes on the input
+18:30
+image goes everywhere does the convolution operation and produces the output image and remember that in one filtering
+18:37
+layer there might be many filters so for example here you can see that there are 10 filters in the first layer 1 2 3 4 5
+18:46
+6 7 8 and 9 and 10 what each filter does is that each filter goes through the
+18:51
+image and performs this convolution operation each filter would have different uh the size of each filter in
+18:57
+a layer would be the same but the values in each filter might be different and why they are different because each
+19:03
+filter is detecting some different feature maybe the first filter is detecting the edges of the coffee cup
+19:09
+maybe the second filter is detecting whether uh the surface between the liquid and the solid of the coffee cup
+19:16
+maybe the third filter is detecting the curved edges of the handle of the coffee cup
+19:21
+Etc that's why we have all these filters so that's what's happening in a filtering layer here you can see that in
+19:29
+the second so this is the first filtering layer it has 10 filters here there is a second filtering layer and
+19:34
+this also has 10 fil filters then the third filtering layer and then the fourth filtering layer remember that as
+19:41
+we go deeper and deeper and deeper into the convolutional neural network the filter start detecting more advanced
+19:47
+features so for example if you have a zebra initially the filter might detect
+19:52
+just the edges Contours Etc the later layer filters can detect minute things
+19:58
+such as the black and white stripes Etc so that's what's happening in a
+20:03
+filtering level filtering layer at a broad view filters detect features in the CNN and they are one of the most
+20:09
+important aspects of a convolutional neural network so that's the first building block which is the filtering
+20:16
+layer now let's come to the second building block which is the max pulling layer what happens in a Max pulling
+20:22
+layer is that we downsize the image let's say the image looks something like this um so in Max poing we look at
+20:30
+specific chunks of image chunks of the image and we take the maximum value so for example here we are doing Max
+20:37
+pooling with a size of 2x two and with a stride of two which means there will be four blocks created like this in every
+20:43
+block we look at the pixel values and choose the maximum so in the first block the maximum value is 20 so the output
+20:50
+will be 20 in the second block the maximum value is 30 so the output will be 30 in the third block the maximum
+20:57
+value is 112 So the out output will be 112 in the fourth block the maximum value is 37 so the output will be 37
+21:04
+that's why we do Max pooling and why is Max pulling done first it extracts the most important features since we look at
+21:11
+the maximum value and second quite important is that it downscales the image right so it actually uh reduces
+21:19
+the computational time required in convolutional neural networks and finally the third is that it adds
+21:26
+transational invariance which means that in our input image even if the image is slightly rotated or slightly translated
+21:34
+since we are only taking the maximum value of pixels in a given region the max pulling operation will result in the
+21:40
+same value even if the image is slightly translated or slightly rotated so these are the three advantage of the max
+21:46
+pooling layer even in this animation you can see that there's a Max pooling layer over here which is applied and here you
+21:53
+can see on the screen what the max pulling does it actually slides over the entire thing and then produces an output
+22:00
+but look at the size of the input the size of the input is 60 60 and the size of the output is
+22:06
+3030 this means that Max pooling is actually reducing the size right so when
+22:11
+we move to the next layer the next layer input will be the max layer output will be which will be the reduced size so the
+22:19
+next layer's computational time will actually be reduced that's one advantage of Max pooling so generally people what
+22:26
+people generally do is that they have few layers of fil filtering then they have Max pulling then again few layers of filtering or convolution then Max
+22:32
+pulling so here see we have one one convolution plus Ru convolution plus reu
+22:38
+then Max pool then we have convolution plus reu convolution plus reu and Max
+22:44
+pool Rao activation function is employed very commonly after we do the convolution operation so that if there
+22:51
+are any negative pixels we put them to zero and if there are any positive pixels we leave them
+22:57
+V so this this is the second building block which is the max pulling layer the third building block is actually the
+23:03
+flattening layer what this does is very simple so this flattening layer usually
+23:08
+comes towards the end so if you see in the description the flattening layer usually comes towards the end after the
+23:14
+filtering and pulling is finished and it looks at the last layer output which might look something like this and then
+23:21
+it just flattens it out so it looks at the Matrix and it converts it into a flat Vector like this so if it's a three
+23:28
+by3 output from the last layer the flattening layer converts it into a 9 by1 flattened
+23:35
+vector and then the last building block is the fully connected layer what this fully connected layer is doing here is
+23:42
+that it's actually just a simple neural network with weights and biases so for
+23:48
+example the flattening layer this is the flattening layer output that's passed
+23:53
+into a fully connected neural network layer in our case what will happen is that let's say if the flattening layer
+23:59
+output is this the final there will be two
+24:05
+neurons uh and why will there be two neurons because we have a yes or no prediction over here so let me switch to
+24:12
+a different color here right so there will be two neurons
+24:18
+let's say this neuron is for S and let's say this neuron is for no so let's say we have a brain tumor image over here it
+24:26
+goes through the filtering layer it goes through the max pooling it goes through all of these layers it goes through the
+24:32
+flattening and finally we come to the fully connected layer over here so the
+24:37
+main objective is that at the end of this uh we'll maybe have a 0.9 value
+24:43
+here and 0.1 value here which means that our CNN is predicting that with a 90%
+24:48
+probability brain tumor is present and with a 10% probability brain tumor is absent or brain tumor is not there to
+24:56
+get this probabilities there is usually soft Max layer which is implemented at the
+25:02
+output um and the main idea is that if the brain tumor is present in the input image this neuron should fire a lot so
+25:09
+it should be 0 95 or 99 and this should be very low on the other hand if brain tumor is absent the no neuron should
+25:16
+fire a lot that should be 09599 and the yes neuron should be very low so that's the fully connected layer
+25:23
+it has weights and it has biases and it comes with a soft Max Activation so that that's also written
+25:29
+here I believe so if you look at uh maybe I missed that
+25:35
+image yeah it's over here so if you look at the fully connected layer here you'll see that there's a soft Max activation
+25:41
+functions just because we want the outputs to be in probabilities so these are the building
+25:47
+blocks of a convolution convolutional neural network keep them in mind keep them in mind because these are the same
+25:52
+building blocks which we'll be coding in Python when we build the CNN model remember the first is the convolutional
+25:59
+layer second is the max pulling layer third is the flatten layer and fourth is
+26:04
+the fully connected layer now let's go to the code again right
+26:09
+now um okay so uh here we can I have
+26:14
+just mentioned some description so that when I share this notebook with all of you you can very easily go through the
+26:20
+different layers I explained the pooling to you right now I explained the uh
+26:25
+fully connected layer I explained uh AC evation functions such as Ru and soft Max and I also explained the convolution
+26:33
+operation which actually happens one thing which I did not explain is the batch normalization what
+26:39
+batch normalization does is that after every layer operate it kind of brings that entire output into one scale into
+26:46
+standard range and this is usually done to accelerate the training
+26:53
+procedure okay so now we are ready to understand the neural net Network
+26:58
+architecture code in kasas so you remember we loaded the sequential module
+27:04
+for from kasas that's very important so first we load that module sequential so that we can stack these different
+27:12
+layers uh in front of each other also keep this in mind first we'll have a
+27:17
+convolutional layer so uh first we have a convolutional layer here where we also
+27:23
+Define the um filter size and we Define the number of filters so here I have 32
+27:30
+filters and each filter size is 2x2 uh so this 32 is basically the
+27:36
+number of filters so here in this in this animation there were 10 filters right what's corresponding to that in
+27:43
+the code is that we have just return it to be 32 filters and I hope that each filter will recognize some different
+27:49
+feature in the input image the input shape is 128 1283 as we already
+27:55
+know then what I do is I I stack The Rao activation in front of it so as I
+28:02
+explained to you over here after every convolutional layer there is usually a ra layer so that if there are some
+28:08
+negative output values we put them to zero and if there are some positive output values we leave them as they are
+28:14
+so then we have the reu activation then what we do is we add a batch normalization layer over here so that
+28:21
+the outputs are standardized to a common scale then we add the max pulling layer
+28:27
+remember now you know know what the max pooling does the pool size is 2X two which means that the 2x two will go over
+28:34
+the entire image and in every 2 by2 block it will look at the maximum value and pull out that value this will
+28:40
+actually reduce the length and the width of the input by half uh then we add a Dropout so what
+28:48
+Dropout actually does is that if there are some uh filters we switch them off uh so here we
+28:56
+say that with 25 % probability you switch switch off you select 25% of the
+29:02
+filters in this layer and you randomly you randomly select these filters and you turn their weights to zero the
+29:08
+reason this is done is to avoid overfitting so what usually happens is that some filters start relying on each
+29:14
+other so if one filter sees that the other if I just mimic the other filters values usually the loss is minimized so
+29:22
+it does nothing that filter learns nothing it becomes a lazy filter so to prevent that laziness we randomly switch
+29:29
+off some filters so that every filter has to learn something so in each iteration approximately 1/4 or 25% of
+29:36
+the filter outputs or filter weights are set to zero this is the Dropout layer It
+29:43
+generally used to prevent overfitting if you do not know about the Dropout no worries in this lecture the main goal is
+29:50
+to explain everything related to the convolutional neural network Dropout is a concept originated from neural network
+29:56
+training but but I have briefly explained to you the intuition so after this we add another convolution layer so
+30:04
+another with reu and one more with the ru so here we
+30:09
+can see over here that we add two more layers with Ru which is similar to what is shown in this
+30:15
+figure and uh then what we'll be doing is that uh after this we'll again add
+30:21
+one more layer of batch normalization one more max pooling and uh one more
+30:27
+Dropout layer usually this is what is done in CNN when you define a CNN the same thing is
+30:32
+repeated multiple times why do we need so many filtering layers because we we want overall maximum features from the
+30:40
+input image to be captured the brain tumor image would have many features right uh so for example let me look at
+30:48
+one such image let's say we are looking at this image there are so many features in this image there is there is this
+30:54
+white spot here which might be that this is a brain tumor and I want my AI model
+30:59
+to ultimately detect this spot and say it's a tumor that's why I'm using so many filters so that hopefully one such
+31:05
+filter or combination of all of these filters can detect that feature for me
+31:11
+that's why we have so many layers then finally we have the flatten layer as I
+31:16
+showed you over here usually the fat flatten layer comes towards the end which is followed by fully connected
+31:22
+layer so I showed you the flatten layer in the code model. add flatten and then
+31:27
+then as I mentioned we have a fully connected layer um again we have the softmax
+31:34
+activation function towards the end so that the output needs to be in probabilities and since this is a
+31:39
+classification problem we'll be using the categorical cross entropy loss and the optimizer which you're using is
+31:45
+adamax you can use other optimizers like stochastic gradient descent uh RMS prop
+31:51
+Etc but for all practical purposes adamx and Adam
+31:57
+generally do very good job so this is the model which I'm using let me go over this model again I first add
+32:03
+convolutional layers two two layers with reu then I add batch normalization Max
+32:09
+pulling and Dropout then I again add two more convolutional layers with reu uh
+32:15
+then I add another one of batch normalization then I uh then I again add
+32:23
+One Max pooling then I again add one dropout
+32:28
+then I add the flatten then I add the fully connected layer with finally I
+32:33
+have the soft Max activation function and then in the last step I'm going to define the loss which is the categorical
+32:39
+cross entropy and the optimizer which I'm going to use so that's it the model has been defined right now and you can
+32:46
+actually print the model do summary this is a very useful useful feature in kasas where you can actually see the different
+32:52
+model and the parameters which you have so this is quite interesting let's see what all we have defined we have we have
+32:58
+two convolutional layers over here batch normalization then Max pooling Dropout
+33:04
+two more convolutional layers batch normalization uh Max pulling Dropout and
+33:11
+then finally we have the flatten and the dense layers towards the
+33:17
+end I want you to keep an eye out on the number of parameters which we are training it's a huge number of
+33:24
+parameters and there are many parameters which are actually coming from this dense layer that's why we don't use
+33:29
+fully connected feed forward neural networks imagine if you only use feed forward neural network just from one
+33:36
+dense layer we are getting so many parameters imagine if we are 50 such layers it would be impossible to train
+33:42
+if you just look at the CNN layers however there are much fewer parameters 400 4,000 128 16,000
+33:51
+Etc um it just when we add the dense layer which is the fully connected layer
+33:57
+which has actually the maximum number of parameters so the total number of parameters here are
+34:04
+uh 3358 5602 which is a huge number of
+34:10
+parameters in terms of millions I think this is 33 million uh parameters and it
+34:15
+overall takes 100 megabyte of space you can run this on your machine it does not take too much time so this is the uh
+34:23
+model architecture which we are going to be using keep in mind that the first first set of convolutional layers use 32
+34:30
+filters and the second set uses 64 filters remember I mentioned that as we
+34:35
+go deeper into the CNN more complex and intricate features are detected and we
+34:40
+just want more filters here so that we don't miss out on any features so this is how the model has
+34:47
+been uh model parameters have been defined and the model architecture has
+34:52
+been defined what we'll be then doing is that we'll be training
+Model training
+34:58
+the convolutional neural network what actually happens in the training process is that uh back propagation and
+35:07
+uh uh gradient descent is happening so ultimately uh in a CNN the weights come
+35:13
+from two layers the weights come from uh the convolutional layer because every filter has weights and the weights come
+35:20
+from the fully connected layer all other layers do not have any weights to optimize the pooling layer does not have
+35:26
+any weights the flatten layer does not have any weights so the weights in the convolutional layer which is the filter
+35:32
+weights and the weights in the fully connected layer which are actually the weights associated with the neurons we
+35:38
+merge them into a parameter set and then we do gradient descent uh first we find the partial
+35:44
+derivative of the loss with respect to all of the weights through the backward pass and then we do gradient
+35:49
+descent that's what is happening in the training process kasas makes it very easy to train you can use this model.
+35:55
+fit X train y train you can specify the number of epo batch size and the
+36:01
+validation data also so I'm going to be showing the training loss as well as the validation loss I'm going to be doing 30
+36:08
+epochs remember one Epoch is going through the entire data set once so 30 epochs means that I'll go through the
+36:14
+entire data set around 30 30 times you can play around with these
+36:19
+parameters to get better and better results you can play around with the number of epo you can even play around
+36:25
+with uh this architecture there is no no specific reason for sticking with this architecture it's all experimental in
+36:31
+nature this architecture worked and so I'm demonstrating it in this tutorial you can try removing some layers also if
+36:38
+you think why there are so many parameters why do I need so why do I need 512 neurons in the fully connected
+36:44
+layer what if I just have five try around with this and explore so I have run this training
+36:51
+process already for 30 box and if you reach towards the end you will see that the training loss has actually become
+36:56
+very very very small and the validation loss is not that small the training loss
+37:02
+is 0.0062 the validation loss is 17523 I'm not very happy with this
+37:09
+because if the validation loss is that much higher than the training loss it's usually a sign of overfitting which
+37:15
+means that on our new data our model might not do that well so to avoid overfitting you can do
+37:21
+many things such as uh you can reduce the number of epochs maybe uh then you
+37:28
+can add L1 and L2 regularization in the loss function we have already added
+37:33
+Dropout right you can increase the dropout rate um you can add batch normalization to every single layer you
+37:40
+can do multiple things to prevent overfitting actually you can try experimenting with different things
+37:45
+different optimizers Etc to see if the validation loss can be reduced further for the sake of this demonstration since
+37:51
+the training loss is very low and the validation loss is reasonably low I'll stick with this
+37:58
+um and let's see how we proceed next so the next step is actually to plot the training loss and the validation loss so
+Plotting losses
+38:05
+here I plotted this so I plotted two losses here the testing loss and the validation training loss I have not
+38:11
+plotted because anyway I've have seen that it becoming very low so remember we reserved some data for testing uh I
+38:18
+plotted that loss also so here you can see that the testing and the validation loss is closer in fact the testing loss
+38:24
+is much lesser than the validation loss both both of these data sets the testing
+38:29
+and validation are the data sets which have not been seen during the training so I'm very happy that the testing loss
+38:35
+is actually this low which means that our model is doing well I would ideally like it to be even lower especially the
+38:42
+validation loss and even the testing loss can be a bit lower but for the sake of this demonstration it's fine to make
+38:49
+it even lower as I mentioned before try changing the CNN architecture try
+38:54
+changing the number of filters the number of units the dropout rate adding L1 L2
+39:00
+regularization um changing the number of epo in the training process changing the bat size you can do several different
+39:09
+things okay so uh for now I'm happy with the plots which I'm getting in the
+39:14
+testing and validation so I'm going to proceed to the next step in the next step what we are going to do is that we
+Model testing
+39:20
+are going to look at random images in our test data uh whose answers we know
+39:25
+and then we are going to look at model predictions on those and try to see whether our model is predicting or not
+39:31
+these are images which our model has not seen before since they in the test data so this will be an interesting exercise
+39:38
+so let's do that so first what I'm going to do is that I'm going to upload an image which is in the no category this
+39:43
+is the testing data set and I'm going to uh do the model.
+39:49
+predict um and I'm going to just print out the result so this is in the no category it true value is no and if I
+39:55
+run this I'll say that with see that with 99% confidence the model is saying that no this is not a tumor amazing so
+40:03
+it matches the underlying truth now I'm going to load a data whose True Value is
+40:08
+yes and I'm going to run this and let's see what the model predicts so the model
+40:13
+predicts with 100% confidence that it is a tumor amazing what I suspect is
+40:19
+happening is that our model through its filters and through the features which the filters recognized has identified
+40:26
+that whenever there are this spots which are present in the images it's a tumor and when and whenever the images are
+40:32
+relatively smoother uh it's not a tumor so for example here this spot appears randomly
+40:37
+out of nowhere right and maybe the one of the filters or combination of the
+40:43
+filters has detected that when this happens it's a tumor so it looks to be that the model
+40:49
+is doing very well our testing loss is low or validation loss is low great the
+40:55
+you have run the brain tumor AI model so now you can give this model to a doctor or anyone they can upload their brain
+46:47
+other CNN related projects thank you so much everyone I hope you enjoyed through
+46:53
+this tutorial and you learned everything from the basics if you want to understand the theory and the concepts
+46:59
+look at the other CNN videos in the in our YouTube channel and I'm sure you'll understand much more thank you everyone
+47:06
+and uh I look forward to seeing you in the next lecture
